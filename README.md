@@ -8,6 +8,8 @@ http://casual-effects.com/markdeep/
 
 Markdeep is free and easy to use. It doesn't need a plugin, or Internet connection. There's nothing to install. Just start writing in Vi, Nodepad, Emacs, Visual Studio, Atom, or another editor! You don't have to export, compile, or otherwise process your document. Here's an example of a text editor and a browser viewing the _same file_ simultaneously:
 
+![Example.md](https://files.app.net/7vx2qYsyO) ![Example.md.html](https://files.app.net/7vx2lF2s-)
+
 Markdeep is ideal for design documents, specifications, README files, code documentation, lab reports, and technical web pages. Because the source is plain text, Markdeep works well with software development toolchains.
 
 Markdeep was created by Morgan McGuire at [Casual Effects](http://casual-effects.com) with inspiration from John Gruber's [Markdown](https://daringfireball.net/projects/markdown/). The current minified-only beta release is public in order to find bugs and get feedback, but a full and stable version with natural source is coming soon after some more code cleanup.
