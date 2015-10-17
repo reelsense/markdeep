@@ -6,9 +6,7 @@ http://casual-effects.com/markdeep/
 
 **Markdeep** is a technology for writing plain text documents that will look good in any web browser. It supports diagrams, common styling conventions, and equations as extensions of Markdown syntax.
 
-Markdeep is free and easy to use. It doesn't need a plugin, or Internet connection. There's nothing to install. Just start writing in Vi, Nodepad, Emacs, Visual Studio, Atom, or another editor! You don't have to export, compile, or otherwise process your document. Here's an example of a text editor and a browser viewing the _same file_ simultaneously:
-
-![Example.md](https://files.app.net/7vx2qYsyO) ![Example.md.html](https://files.app.net/7vx2lF2s-)
+Markdeep is free and easy to use. It doesn't need a plugin, or Internet connection. There's nothing to install. Just start writing in Vi, Nodepad, Emacs, Visual Studio, Atom, or another editor! You don't have to export, compile, or otherwise process your document. 
 
 Markdeep is ideal for design documents, specifications, README files, code documentation, lab reports, and technical web pages. Because the source is plain text, Markdeep works well with software development toolchains.
 
