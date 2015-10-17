@@ -4,6 +4,14 @@ This is an officicial un-minified version of markdeep.mini.js.
 
 http://casual-effects.com/markdeep/
 
+**Markdeep** is a technology for writing plain text documents that will look good in any web browser. It supports diagrams, common styling conventions, and equations as extensions of Markdown syntax.
+
+Markdeep is free and easy to use. It doesn't need a plugin, or Internet connection. There's nothing to install. Just start writing in Vi, Nodepad, Emacs, Visual Studio, Atom, or another editor! You don't have to export, compile, or otherwise process your document. Here's an example of a text editor and a browser viewing the _same file_ simultaneously:
+
+Markdeep is ideal for design documents, specifications, README files, code documentation, lab reports, and technical web pages. Because the source is plain text, Markdeep works well with software development toolchains.
+
+Markdeep was created by Morgan McGuire at [Casual Effects](http://casual-effects.com) with inspiration from John Gruber's [Markdown](https://daringfireball.net/projects/markdown/). The current minified-only beta release is public in order to find bugs and get feedback, but a full and stable version with natural source is coming soon after some more code cleanup.
+
 # Style Features
 
 Unique features:
@@ -50,34 +58,22 @@ I created Markdeep because I was no longer willing to choose between design docu
 
 HTML is "mark_**up**_" that extends plain text with formatting. Unfortunately, the formatting tags often make original document source hard to read and write. This is slow and annoying, especially for those of us who use programming tools for document editing or want formatting in documentation files.
 
-John Gruber invented [Markdown][1] to address HTML's editing problems. The name "mark**_down_**" conveys styling in the opposite direction of the "mark**_up_**" tag syntax. Markdown beautifies text without explicit tags, based on common practices from ASCII e-mail and plain-text documents.
+John Gruber invented [Markdown](https://daringfireball.net/projects/markdown/) to address HTML's editing problems. The name "mark**_down_**" conveys styling in the opposite direction of the "mark**_up_**" tag syntax. Markdown beautifies text without explicit tags, based on common practices from ASCII e-mail and plain-text documents
 
-   [1]: https://daringfireball.net/projects/markdown/
-
-"Mark_**deep**_" is farther "down" from "mark_**down**_" on the autostyling and beautification path. Markdeep combines an easy-to-use and browser-friendly packaging with new unique features for diagrams. The code includes some of the best previous Javascript document formatting libraries and links to [MathJax][2] for equation typesetting.
-
-   [2]: https://www.mathjax.org/
+"Mark_**deep**_" is farther "down" from "mark_**down**_" on the autostyling and beautification path. Markdeep combines an easy-to-use and browser-friendly packaging with new unique features for diagrams. The code includes some of the best previous Javascript document formatting libraries and links to [MathJax](https://www.mathjax.org/) for equation typesetting
 
 Markdeep was created by Morgan McGuire. It extends the work of:
 
   * John Grubber's original Markdown concept and specification
-  * Ben Hollis' [Maruku][3] (aka "Githib") Markdown dialect specification
-  * Michel Fortin's [Extra][4] Markdown dialect specification
-  * Dominic Baggott's [markdown.js][5] implementation for table and list processing
-  * Ivan Sagalaev's [highlight.js][6] for syntax coloring
+  * Ben Hollis' [Maruku](http://maruku.rubyforge.org/maruku.html) (aka "Githib") Markdown dialect specification
+  * Michel Fortin's [Extra](https://michelf.ca/projects/php-markdown/extra/) Markdown dialect specification
+  * Dominic Baggott's [markdown.js](https://github.com/evilstreak/markdown-js) implementation for table and list processing
+  * Ivan Sagalaev's [highlight.js](https://highlightjs.org/) for syntax coloring
   * Contributors to the above open source projects
-
-   [3]: http://maruku.rubyforge.org/maruku.html
-   [4]: https://michelf.ca/projects/php-markdown/extra/
-   [5]: https://github.com/evilstreak/markdown-js
-   [6]: https://highlightjs.org/
-
 
 # License
 
-Markdeep is open source. You may use, extend, and redistribute Markdeep without charge under the terms of the [BSD license][1]:
-
-       [1]: https://opensource.org/licenses/BSD-2-Clause
+Markdeep is open source. You may use, extend, and redistribute Markdeep without charge under the terms of the [BSD license](https://opensource.org/licenses/BSD-2-Clause):
 
 
           Copyright 2015, Morgan McGuire
@@ -178,9 +174,7 @@ Starting in November 2015, old releases will be archived as
 
 You can modify the Markdeep line at the bottom of a document to hardcode to a specific version instead of the default version of "`latest`".
 
-You can report bugs to [morgan@casual-effects.com][2] by sending a Markdeep document and what you think is wrong about the way that it appears.
-
-   [2]: mailto:morgan@casual-effects.com
+You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
   * 2015-10-16 Version 0.02: Conformance
 
