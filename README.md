@@ -3,6 +3,7 @@
 This is an unofficial un-minified version of ``markdeep.mini.js``.
 
 http://casual-effects.com/markdeep/
+Markdeep
 
 **Markdeep** is a technology for writing plain text documents that will look good in any web browser. It supports diagrams, common styling conventions, and equations as extensions of Markdown syntax.
 
