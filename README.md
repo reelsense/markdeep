@@ -176,15 +176,17 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
-  * 2015-10-20 Version 0.03: TBD
+  * 2015-10-27 Version 0.04: TBD
+    1. Added notes about Unicode source (still looking for a more elegant solution)
+
+  * 2015-10-21 Version 0.03: Embedding Support
     1. Improved handling of underscore lines and parentheses in diagrams
     2. Added support for short verticals in diagrams, e.g., _.- -._
     3. Added support for hyperlinking of URLs containing ? and &
     4. Added CSS class support for <em> and <strong> tags to allow reinterpretation of *em* vs. _em_ syntax.
     5. Fixed single quotes and dollar signs in fenced code blocks
 
-  * 2015-10-16 Version 0.02: Conformance
-
+  * 2015-10-18 Version 0.02: Conformance
     1. Reduced minified script size by 1k (to 83k)
     2. Added support for as a list bullet
     3. Explicitly protected script and style blocks (CommonMark)
