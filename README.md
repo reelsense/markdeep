@@ -5,12 +5,6 @@ This is an unofficial un-minified version of ``markdeep.mini.js``.
 http://casual-effects.com/markdeep/
 Markdeep
 
-✒
-
-[**Demo**][1] | Features | Get Started | Credits |  License
-
-   [1]: http://casual-effects.com/markdeep/features.md.html
-
 **Markdeep** is a technology for writing plain text documents that will look good in any web browser. It supports diagrams, common styling conventions, and equations as extensions of Markdown syntax.
 
 Markdeep is free and easy to use. It doesn't require a plugin or Internet connection. Your document never leaves your machine and there's nothing to install. Just start writing in Vi, Nodepad, Emacs, Visual Studio, Atom, or another editor! You don't have to export, compile, or otherwise process your document.
