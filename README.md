@@ -127,26 +127,30 @@ This will process `<markdeep>` tags as Markdeep (which may include embedded diag
 You can also use `<pre class="markdeep">` and `<pre class="diagram">` tags.
 
 
-> <h2>Markdeep with Doxygen<h2>
+## Markdeep with Doxygen
 
 Set an explicit footer in `Doxyfile` with:
 
-`HTML_FOOTER = footer.html`
+```HTML_FOOTER = footer.html```
 
 Include the following lines in the `footer.html`:
 
-`<script>window.markdeepOptions = {mode: 'doxygen'};</script>   
->&lt;script src="markdeep.min.js"&gt;&lt;script&gt;<code>
+```
+<script>window.markdeepOptions = {mode: 'doxygen'};</script>
+<script src="markdeep.min.js"><script>
+```
 
 Use `<pre class="markdeep">` and `<pre class="diagram">` tags in your documentation.
 
 
-> <h2>Javascript API<h2>
+## Javascript API
 
 You can prevent Markdeep from autoformatting a document so that you can use it as a Javascript library by loading it as:
 
-`<script>window.markdeepOptions = {mode: 'script'};</script>   
->&lt;script src="markdeep.min.js"&gt;&lt;script&gt;<code>
+```
+<script>window.markdeepOptions = {mode: 'script'};</script>
+<script src="markdeep.min.js"><script>
+```
 
 This allows you to then manually invoke diagram processing or full Markdeep processing from within your own Javascript programs. Markdeep exports the following members on `window.markdeep`:
 
