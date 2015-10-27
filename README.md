@@ -183,7 +183,7 @@ You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.
     1. Improved handling of underscore lines and parentheses in diagrams
     2. Added support for short verticals in diagrams, e.g., _.- -._
     3. Added support for hyperlinking of URLs containing ? and &
-    4. Added CSS class support for <em> and <strong> tags to allow reinterpretation of *em* vs. _em_ syntax.
+    4. Added CSS class support for `<em>` and `<strong>` tags to allow reinterpretation of *em* vs. _em_ syntax.
     5. Fixed single quotes and dollar signs in fenced code blocks
 
   * 2015-10-18 Version 0.02: Conformance
