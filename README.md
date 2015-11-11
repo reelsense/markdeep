@@ -176,8 +176,26 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
-  * 2015-10-27 Version 0.04: TBD
-    1. Added notes about Unicode source (still looking for a more elegant solution)
+  * 2015-11-10 Version 0.05: Beta
+    1. Added named anchors to all sections
+    2. Fixed $$ in code blocks
+    3. Fixed header on the first line of a document
+    4. Added table of contents generation
+    5. Adjusted link styling
+    6. Added markdeepOptions.detectMath
+    7. Fixed ==> arrows in html mode
+    8. Released implementation source code
+
+  * 2015-10-27 Version 0.04: Optimization
+    1. Reduced minified script size to 56k (v0.03 was 88k)
+    2. Added notes about Unicode source
+    3. En dash (--), em dash (---), and minus sign
+    4. Transform x into × in cases such as "1920×1080"
+    5. Fixed e-mail addresses in subtitles
+    6. Fixed arrows in the middle of lines not appearing
+    7. Removed borders around diagrams in the default stylesheet
+    8. Made tables centered in the default stylesheet
+    9. Added support for left floating diagrams
 
   * 2015-10-21 Version 0.03: Embedding Support
     1. Improved handling of underscore lines and parentheses in diagrams
