@@ -6,7 +6,7 @@ http://casual-effects.com/markdeep/
 
 **Markdeep** is a technology for writing plain text documents that will look good in any web browser. It supports diagrams, common styling conventions, and equations as extensions of Markdown syntax.
 
-Markdeep is free and easy to use. It doesn't need a plugin, or Internet connection. There's nothing to install. Just start writing in Vi, Nodepad, Emacs, Visual Studio, Atom, or another editor! You don't have to export, compile, or otherwise process your document. 
+Markdeep is free and easy to use. It doesn't need a plugin, or Internet connection. There's nothing to install. Just start writing in Vi, Nodepad, Emacs, Visual Studio, Atom, or another editor! You don't have to export, compile, or otherwise process your document.
 
 Markdeep is ideal for design documents, specifications, README files, code documentation, lab reports, and technical web pages. Because the source is plain text, Markdeep works well with software development toolchains.
 
@@ -175,6 +175,18 @@ Starting in November 2015, old releases will be archived as
 You can modify the Markdeep line at the bottom of a document to hardcode to a specific version instead of the default version of "`latest`".
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
+
+	* 2015-11-30 Version 0.06: Bug Fixes
+		1. Improved arrowheads at points
+		2. Improved arrowheads at boxes
+		3. Improved processing of words with 'o' in boxes
+		4. Script tag workaround for C++ template/Java generic syntax in code examples with capitalized classes
+		5. Fixed blocks beginning at the top of the document
+		6. Allow LaTeX expressions at the end of a sentence
+		7. Relaxed whitespace rules for LaTeX expressions
+		8. Fixed URLs in subtitles
+		9. Centered diagrams by default
+		10. Switched to https by default for Markdeep and Mathjax
 
   * 2015-11-10 Version 0.05: Beta
     1. Added named anchors to all sections
