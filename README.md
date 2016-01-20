@@ -228,7 +228,7 @@ You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.
     20. Hid the document until formatting is complete, once it is known that the script is available
     21. Increased spacing between section numbers and titles
 
- * 2015-11-30 Version 0.06: Bug Fixes
+  * 2015-11-30 Version 0.06: Bug Fixes
     1. Improved arrowheads at points
     2. Improved arrowheads at boxes
     3. Improved processing of words with 'o' in boxes
@@ -242,7 +242,7 @@ You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.
 
   * 2015-11-10 Version 0.05: Beta
     1. Added named anchors to all sections
-    2. Fixed $$ in code blocks
+    2. Fixed ```$$``` in code blocks
     3. Fixed header on the first line of a document
     4. Added table of contents generation
     5. Adjusted link styling
