@@ -176,17 +176,69 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
-	* 2015-11-30 Version 0.06: Bug Fixes
-		1. Improved arrowheads at points
-		2. Improved arrowheads at boxes
-		3. Improved processing of words with 'o' in boxes
-		4. Script tag workaround for C++ template/Java generic syntax in code examples with capitalized classes
-		5. Fixed blocks beginning at the top of the document
-		6. Allow LaTeX expressions at the end of a sentence
-		7. Relaxed whitespace rules for LaTeX expressions
-		8. Fixed URLs in subtitles
-		9. Centered diagrams by default
-		10. Switched to https by default for Markdeep and Mathjax
+
+  * 2016-01-18 Version 0.08: References and Internal Links
+    1. Prevented HTML tags in the title from appearing in the browser tab
+    2. Fixed single-character bold and italic text hanging across lines
+    3. Fixed indented bold and italic text crossing lines
+    4. Added reference-style links
+    5. Added footnotes/endnotes
+    6. Added citations
+    7. Allowed code blocks within other formatting
+    8. Code blocks can now contain diagram syntax without it becoming a diagram
+    9. Optimized performance of documents with many blocks
+    10. Updated Markdeep line hides the document until formatting succeeds or loading markdeep.js times out
+    11. Added smart quotes for double quotation marks
+    12. Fixed strict mode for Firefox
+    13. Protected raw ```<code>``` blocks from processing
+    14. Added automatic section links
+    15. Added table and listing captions
+    16. Added figure, table, and listing numbering and references
+    17. Fixed single-letter italic words in lists
+    18. Allowed lists to omit the leading blank line if the previous line ends in a colon or comma
+    19. Allowed inline code to wrap around a line
+    20. Stylized ```~~~~```code blocks appropriately for listings, while leaving ```` blocks unadorned
+    21. Fixed URLs with underscores and tildes
+    22. Added robust processing of lists with inconsistent indenting
+    23. Added support for lists within definition lists
+    24. Fixed definition lists with multiple :-indented lines
+    25. Added support for multiple paragraphs in definition lists
+    26. Added support for multiple paragraphs in regular lists
+
+  * 2015-12-31 Version 0.07: Polish
+    1. Fixed white dot decorations next to lines in diagrams
+    2. Fixed floating images (broken in 0.06)
+    3. Fixed diagonal up-left arrows not reaching boxes
+    4. Added support for captionless images
+    5. Added captions below images
+    6. Added support for centered images
+    7. Fixed processing of tables with short delimiters
+    8. Fixed diagonals appearing inside curves with vertices in diagrams
+    9. Allowed points vertically and horizontally adjacent to lines and points in diagrams
+    10. Improved unicode line and box character appearance in diagrams
+    11. Allowed leading space and shorter lines for Setext-style headers
+    12. Added Unicode block character support for diagrams
+    13. Enlarged Unicode hexagons to form tighter grids
+    14. Text is now selectable in diagrams
+    15. Added tiny grid examples to features.md.html
+    16. Added dot grid examples to features.md.html
+    17. Added Unicode examples to features.md.html
+    18. Added beautification of a number followed by "degrees"
+    19. Single linebreaks now allowed in italics, bold, and strikethrough
+    20. Hid the document until formatting is complete, once it is known that the script is available
+    21. Increased spacing between section numbers and titles
+
+ * 2015-11-30 Version 0.06: Bug Fixes
+    1. Improved arrowheads at points
+    2. Improved arrowheads at boxes
+    3. Improved processing of words with 'o' in boxes
+    4. Script tag workaround for C++ template/Java generic syntax in code examples with capitalized classes
+    5. Fixed blocks beginning at the top of the document
+    6. Allow LaTeX expressions at the end of a sentence
+    7. Relaxed whitespace rules for LaTeX expressions
+    8. Fixed URLs in subtitles
+    9. Centered diagrams by default
+    10. Switched to https by default for Markdeep and Mathjax
 
   * 2015-11-10 Version 0.05: Beta
     1. Added named anchors to all sections
@@ -195,13 +247,13 @@ You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.
     4. Added table of contents generation
     5. Adjusted link styling
     6. Added markdeepOptions.detectMath
-    7. Fixed ==> arrows in html mode
+    7. Fixed ```==>``` arrows in html mode
     8. Released implementation source code
 
   * 2015-10-27 Version 0.04: Optimization
     1. Reduced minified script size to 56k (v0.03 was 88k)
     2. Added notes about Unicode source
-    3. En dash (--), em dash (---), and minus sign
+    3. En dash ```(--)```, em dash ```(---)```, and minus sign
     4. Transform x into × in cases such as "1920×1080"
     5. Fixed e-mail addresses in subtitles
     6. Fixed arrows in the middle of lines not appearing
@@ -211,7 +263,7 @@ You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.
 
   * 2015-10-21 Version 0.03: Embedding Support
     1. Improved handling of underscore lines and parentheses in diagrams
-    2. Added support for short verticals in diagrams, e.g., _.- -._
+    2. Added support for short verticals in diagrams, e.g., ```_.- -._```
     3. Added support for hyperlinking of URLs containing ? and &
     4. Added CSS class support for `<em>` and `<strong>` tags to allow reinterpretation of *em* vs. _em_ syntax.
     5. Fixed single quotes and dollar signs in fenced code blocks
@@ -221,6 +273,6 @@ You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.
     2. Added support for as a list bullet
     3. Explicitly protected script and style blocks (CommonMark)
     4. No longer allow spaces between flanking bold and italic delimiter runs and enclosed words (CommonMark)
-    5. Switched to <em> and &emstrong> tags from explicit italic and bold ones
+    5. Switched to ```<em>``` and ```&emstrong>``` tags from explicit italic and bold ones
 
   * 2015-10-15 Version 0.01: Initial release
