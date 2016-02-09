@@ -1,7 +1,7 @@
 /**
  See http://casual-effects.com/markdeep for @license and documentation.
 
- markdeep.min.js version 0.08
+ markdeep.min.js version 0.09
  Copyright 2015-2016, Morgan McGuire
  All rights reserved.
  (BSD 2-clause license)
@@ -64,10 +64,10 @@
                 h: "",
                 j: "",
                 m: ""
-            }, n = e.indexOf(M); n >= 0; n = e.indexOf(M, n + M.length)) {
-            var i, a = q(0, e.lastIndexOf("\n", n)) + 1,
+            }, n = e.indexOf(j); n >= 0; n = e.indexOf(j, n + j.length)) {
+            var i, a = L(0, e.lastIndexOf("\n", n)) + 1,
                 s = n - a;
-            for (i = n + M.length; e[i] === $; ++i);
+            for (i = n + j.length; e[i] === M; ++i);
             var o = i - a - 1,
                 c = {
                     g: e.ss(0, a),
@@ -81,8 +81,8 @@
             t();
             for (var p = !0, h = i; p;) {
                 if (a = l, t(), 0 === a) return r;
-                if (u ? c.j = "floatright" : d && (c.j = "floatleft"), e[a + s] === $ && e[a + o] === $) {
-                    for (var f = s; o > f && e[a + f] === $; ++f);
+                if (u ? c.j = "floatright" : d && (c.j = "floatleft"), e[a + s] === M && e[a + o] === M) {
+                    for (var f = s; o > f && e[a + f] === M; ++f);
                     var b = a + s,
                         g = a + o;
                     if (c.m += e.ss(h, b).rp(/^[ \t]*[ \t]/, " ").rp(/[ \t][ \t]*$/, " "), f === o) return c.m += e.ss(a + o + 1), c;
@@ -117,8 +117,8 @@
             var c = [];
             n(i[s + 1]).rp(/:?-+:?/g, function(e) {
                 var t = ":" === e[0],
-                    r = ":" === e[e.length - 1];
-                c.push(' style="text-align:' + (t && r ? "center" : r ? "right" : "left") + '"')
+                    n = ":" === e[e.length - 1];
+                c.push(r(' style="text-align:' + (t && n ? "center" : n ? "right" : "left") + '"'))
             });
             for (var l = "th", u = s; i.length > u; ++u) {
                 var d = n(i[u].trim());
@@ -132,39 +132,127 @@
         })
     }
 
-    function d(e) {
-        for (var t = /^\s*\n/.source, r = /[:,]\s*\n/.source, n = RegExp("(" + r + "|" + t + ")" + /((?:[ \t]*(?:\d+\.|-|\+|\*)(?:[ \t]+.+\n\n?)+)+)/.source, "gm"), i = !0; i;) i = !1, e = e.rp(n, function(e, t, r) {
+    function d(e, t) {
+        for (var r = /^\s*\n/.source, n = /[:,]\s*\n/.source, i = RegExp("(" + n + "|" + r + ")" + /((?:[ \t]*(?:\d+\.|-|\+|\*)(?:[ \t]+.+\n\n?)+)+)/.source, "gm"), a = !0, s = {
+                "+": t('class="plus"'),
+                "-": t('class="minus"'),
+                "*": t('class="asterisk"')
+            }, o = t('class="number"'); a;) a = !1, e = e.rp(i, function(e, t, r) {
             var n = t,
-                a = [],
-                s = {
+                i = [],
+                c = {
                     o: -1
                 };
             for (r.split("\n").forEach(function(e) {
                     var t = e.rp(/^\s*/, ""),
                         r = e.length - t.length,
-                        o = "-" === t[0] || "+" === t[0] || "*" === t[0],
-                        c = /^\d+\.[ \t]/.test(t);
-                    if (s)
-                        if (c || o) {
-                            if (r !== s.o)
-                                if (-1 !== s.o && s.o > r)
-                                    for (; s && s.o > r;) a.pop(), n += "</li></" + s.tag + ">\n", s = a[a.length - 1];
-                                else s = {
+                        l = s[t[0]],
+                        u = !!l;
+                    l = l || o;
+                    var d = /^\d+\.[ \t]/.test(t);
+                    if (c)
+                        if (d || u) {
+                            if (r !== c.o)
+                                if (-1 !== c.o && c.o > r)
+                                    for (; c && c.o > r;) i.pop(), n += "</li></" + c.tag + ">", c = i[i.length - 1];
+                                else c = {
                                     o: r,
-                                    tag: c ? "ol" : "ul",
+                                    tag: d ? "ol" : "ul",
                                     p: e.ss(0, r)
-                                }, a.push(s), n += "<" + s.tag + ">";
-                            else -1 !== s.o && (n += "</li>");
-                            s ? n += "\n" + s.p + "<li>" + t.rp(/^(\d+\.|-|\+|\*) /, "") : (n += "\n" + e, i = !0)
-                        } else n += "\n" + s.p + e;
+                                }, i.push(c), n += "<" + c.tag + ">";
+                            else -1 !== c.o && (n += "</li>");
+                            c ? n += "\n" + c.p + "<li " + l + ">" + t.rp(/^(\d+\.|-|\+|\*) /, "") : (n += "\n" + e, a = !0)
+                        } else n += "\n" + c.p + e;
                     else n += "\n" + e
-                }), s = a.pop(); s; s = a.pop()) n += "</li></" + s.tag + ">";
+                }), c = i.pop(); c; c = i.pop()) n += "</li></" + c.tag + ">\n";
             return n
         });
         return e
     }
 
-    function p(t) {
+    function p(t, r) {
+        var n = /^(?:[^\|<>\s-\+\*\d].*[12]\d{3}(?!\d).*?|(?:[12]\d{3}(?!\.).*\d.*?)|(?:\d{1,3}(?!\.).*[12]\d{3}(?!\d).*?))/.source,
+            i = "(" + n + "):" + /[ \t]+([^ \t\n].*)\n/.source,
+            a = /(?:[ \t]*\n)?((?:[ \t]+.+\n(?:[ \t]*\n){0,3})*)/.source,
+            s = i + a,
+            o = RegExp(s, "gm"),
+            c = r('valign="top"'),
+            l = r('style="width:100px;padding-right:15px" rowspan="2"'),
+            u = r('style="padding-bottom:25px"'),
+            d = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            p = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
+            h = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        try {
+            var f = 0;
+            t = t.rp(RegExp("(" + s + "){2,}", "gm"), function(t) {
+                ++f;
+                var n = [];
+                t.rp(o, function(t, i, a, s) {
+                    var o = "",
+                        h = "",
+                        b = "",
+                        g = i.match(/([0123]?\d)\D+([01]?\d|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\D+([12]\d{3})/i);
+                    if (g) b = g[1], h = g[2], o = g[3];
+                    else if (g = i.match(/([12]\d{3})\D+([01]?\d|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\D+([0123]?\d)/i)) b = g[3], h = g[2], o = g[1];
+                    else {
+                        if (g = i.match(/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\D+([0123]?\d)\D+([12]\d{3})/i), !g) throw "Could not parse date";
+                        b = g[2], h = g[1], o = g[3]
+                    }
+                    i = b + " " + h + " " + o;
+                    var m = parseInt(h) - 1;
+                    isNaN(m) && (m = p.indexOf(h.toLowerCase()));
+                    var v = new Date(parseInt(o), m, parseInt(b));
+                    return i = d[v.getDay()] + "<br/>" + i, n.push({
+                        date: v,
+                        title: a,
+                        text: e("tr", e("td", "<a " + r('name="schedule' + f + "_" + v.getFullYear() + "-" + (v.getMonth() + 1) + "-" + v.getDate() + '"') + "></a>" + i, l) + e("td", e("b", a)), c) + e("tr", e("td", "\n\n" + s, u), c)
+                    }), ""
+                }), n.sort(function(e, t) {
+                    return e.date.getTime() - t.date.getTime()
+                });
+                var i = 864e5,
+                    a = (n[n.length - 1].date.getTime() - n[0].date.getTime()) / i,
+                    s = new Date;
+                s = new Date(s.getFullYear(), s.getMonth(), s.getDay());
+                var b = "";
+                if (a > 14 && 16 > a / n.length) {
+                    var g = r('colspan="2" width="14%" style="padding-top:5px;text-align:center;font-style:italic"'),
+                        m = r('width="1px" height="30px" style="text-align:right;border:1px solid #EEE;border-right:none;"'),
+                        v = r('width="1px" height="30px" style="color:#BBB;text-align:right;"'),
+                        y = r('width="14%" style="border:1px solid #EEE;border-left:none;"'),
+                        x = n[0].date,
+                        w = 0;
+                    x = new Date(x.getFullYear(), x.getMonth(), 1);
+                    for (var N = function(e, t) {
+                            return Math.abs(e.getTime() - t.getTime()) < i / 2
+                        }; x.getTime() < n[n.length - 1].date.getTime();) {
+                        for (b += "<table " + r('class="calendar"') + ">\n" + e("tr", e("th", h[x.getMonth()] + " " + x.getFullYear(), r('colspan="14"'))) + "<tr>", d.forEach(function(t) {
+                                b += e("td", t, g)
+                            }), b += "</tr>"; 0 !== x.getDay();) x = new Date(x.getTime() - i);
+                        if (1 !== x.getDate())
+                            for (b += "<tr " + c + ">"; 1 !== x.getDate();) b += "<td " + v + ">" + x.getDate() + "</td><td>&nbsp;</td>", x = new Date(x.getTime() + i);
+                        do {
+                            0 === x.getDay() && (b += "<tr " + c + ">");
+                            var _ = n[w],
+                                k = "";
+                            N(x, s) && (k = r(' class="today"')), _ && N(_.date, x) ? (b += e("td", e("b", x.getDate()), m + k) + e("td", e("a", _.title, r('href="#schedule' + f + "_" + x.getFullYear() + "-" + (x.getMonth() + 1) + "-" + x.getDate() + '"')), y + k), ++w) : b += "<td " + m + k + "></a>" + x.getDate() + "</td><td " + y + k + "> &nbsp; </td>", 6 === x.getDay() && (b += "</tr>"), x = new Date(x.getTime() + i)
+                        } while (x.getDate() > 1);
+                        if (0 !== x.getDay()) {
+                            for (; 0 !== x.getDay();) b += "<td " + v + ">" + x.getDate() + "</td><td>&nbsp</td>", x = new Date(x.getTime() + i);
+                            b += "</tr>"
+                        }
+                        b += "</table><br/>\n", x = new Date(x.getFullYear(), x.getMonth(), 1)
+                    }
+                }
+                return t = "", n.forEach(function(e) {
+                    t += e.text
+                }), b + e("table", t, r('class="schedule"')) + "\n\n"
+            })
+        } catch (b) {}
+        return t
+    }
+
+    function h(t) {
         var r = /^\w.*\n:/.source,
             n = "(s*\n|[: 	].+\n)+";
         return t = t.rp(RegExp("(" + r + n + ")+", "gm"), function(t) {
@@ -175,7 +263,7 @@
         })
     }
 
-    function h(e) {
+    function f(e) {
         var t = "",
             r = "",
             n = [0],
@@ -200,99 +288,106 @@
         }), d || (e = u + e), [e, o]
     }
 
-    function f(e) {
-        return e.rp(/([\.\[\]\(\)\*\+\?\^\$\\])/g, "\\$1")
+    function b(e) {
+        return e.rp(/([\.\[\]\(\)\*\+\?\^\$\\\{\}\|])/g, "\\$1")
     }
 
-    function b(t, n) {
+    function g(t, n) {
         function s(e) {
-            for (var t = (k.push(e) - 1).toString(C); $ > t.length;) t = "0" + t;
-            return _ + t
+            for (var t = ($.push(e) - 1).toString(C); M > t.length;) t = "0" + t;
+            return k + t
         }
 
         function o(e) {
             var e = parseInt(e.ss(1), C);
-            return k[e]
+            return $[e]
         }
 
-        function b(e, t) {
+        function g(e, t) {
             return s(t)
         }
 
-        function g(e, t, r) {
+        function m(e, t, r) {
             return t + s(r)
         }
 
-        function m(e) {
-            var t = c(e);
-            return t.h ? t.g + v(t.h, t.j) + "\n" + m(t.m) : e
-        }
-
-        function y(t) {
+        function v(t) {
             return function(r, n) {
                 return "\n<a " + s('name="' + a(i(n)) + '"') + "></a>" + e("h" + t, n) + "\n\n"
             }
         }
-        var x = {},
-            w = 0,
-            N = {},
-            _ = "\ue010",
+
+        function x(e) {
+            var t = c(e);
+            return t.h ? t.g + y(t.h, t.j) + "\n" + x(t.m) : e
+        }
+        var w = {},
+            N = 0,
+            _ = {},
+            k = "\ue010",
             C = 36,
-            k = [],
-            $ = 4,
-            M = RegExp(_ + "[0-9a-z]{" + $ + "," + $ + "}", "g");
+            $ = [],
+            M = 4,
+            j = RegExp(k + "[0-9a-z]{" + M + "," + M + "}", "g");
         void 0 === n && (n = !0), void 0 !== t.innerHTML && (t = t.innerHTML), t = t.rp(/<script\s+type\s*=\s*['"]preformatted['"]\s*>([\s\S]*?)<\/script>/gi, "$1"), t = "\n" + t;
-        var B = function(r, n) {
+        var E = function(r, n) {
             var i = RegExp("\n" + n + "{3,}.*\n([\\s\\S]+?)\n" + n + "{3,}\n([ 	]*\\[.*\\])?", "g");
             t = t.rp(i, function(t, n, i) {
                 var a = "\n";
                 return i && (i = i.trim(), a += "<div " + s('class="listingcaption ' + r + '"') + ">" + i.ss(1, i.length - 1) + "</div>\n"), a + s(e("pre", e("code", hljs.highlightAuto(n).value), 'class="listing ' + r + '"')) + "\n"
             })
         };
-        B("tilde", "~"), B("backtick", "`"), t = t.rp(/(<code\b.*?<\/code>)/gi, b), t = m(t), t = t.rp(/<svg( .*?)?>([\s\S]*?)<\/svg>/gi, function(e, t, r) {
+        E("tilde", "~"), E("backtick", "`"), t = t.rp(/(<code\b.*?<\/code>)/gi, g), t = x(t), t = t.rp(/<svg( .*?)?>([\s\S]*?)<\/svg>/gi, function(e, t, r) {
             return "<svg" + s(t) + ">" + s(r) + "</svg>"
         }), t = t.rp(/(`)(.+?(?:\n.+?)?)`(?!\d)/g, e("code", "$2")), t = t.rp(/(<code(?: .*?)?>)([\s\S]*?)<\/code>/gi, function(e, t, n) {
             return s(t + r(n) + "</code>")
-        }), t = t.rp(/(<pre\b[\s\S]*?<\/pre>)/gi, b), t = t.rp(/(\$\$[\s\S]+?\$\$)/g, b), t = t.rp(/(<\w[^ \n<>]*?[ \t]+)(.*?)(?=\/?>)/g, g);
-        var j = t;
-        j = j.rp(/((?:[^\w\d]))\$([ \t][^\$]+[ \t])\$(?![\w\d])/g, "$1\\($2\\)"), j = j.rp(/((?:[^\w\d]))\$(\S(?:[^\$]*?\S(?!US))??)\$(?![\w\d])/g, "$1\\($2\\)"), j = j.rp(/(?:^|\n)(.+?)\n[ \t]*={3,}[ \t]*\n/g, y(1)), j = j.rp(/(?:^|\n)(.+?)\n[ \t]*-{3,}[ \t]*\n/g, y(2));
-        for (var E = 6; E > 0; --E) j = j.rp(RegExp(/^[ \t]*/.source + "#{" + E + "," + E + "}(?:[ 	])([^\n#]+)#*[ 	]*\n", "gm"), y(E));
-        j = j.rp(/\n((?:_[ \t]*){3,}|(?:-[ \t]*){3,}|(?:\*[ \t]*){3,})\s*?\n/g, "\n<hr/>\n"), j = j.rp(/(?:\n>.*){2,}/g, function(t) {
-            return e("blockquote", t.rp(/\n>/gm, "\n"))
-        }), j = j.rp(/\s*\[\^(.*?)\](?!:)/g, function(e, t) {
-            return t = t.toLowerCase().trim(), t in x || (++w, x[t] = w), "<sup><a " + s('href="#endnote-' + t + '"') + ">" + x[t] + "</a></sup>"
-        }), j = j.rp(/\[#(.*?)\](?!:)/g, function(e, t) {
+        }), t = t.rp(/(<pre\b[\s\S]*?<\/pre>)/gi, g), t = t.rp(/(\$\$[\s\S]+?\$\$)/g, g), t = t.rp(/(<\w[^ \n<>]*?[ \t]+)(.*?)(?=\/?>)/g, m), t = t.rp(/((?:[^\w\d]))\$([ \t][^\$]+[ \t])\$(?![\w\d])/g, "$1\\($2\\)"), t = t.rp(/((?:[^\w\d]))\$(\S(?:[^\$]*?\S(?!US))??)\$(?![\w\d])/g, "$1\\($2\\)"), t = t.rp(/(?:^|\n)(.+?)\n[ \t]*={3,}[ \t]*\n/g, v(1)), t = t.rp(/(?:^|\n)(.+?)\n[ \t]*-{3,}[ \t]*\n/g, v(2));
+        for (var B = 6; B > 0; --B) t = t.rp(RegExp(/^[ \t]*/.source + "#{" + B + "," + B + "}(?:[ 	])([^\n#]+)#*[ 	]*\n", "gm"), v(B));
+        t = t.rp(/\n((?:_[ \t]*){3,}|(?:-[ \t]*){3,}|(?:\*[ \t]*){3,})\s*?\n/g, "\n<hr/>\n");
+        var A = s('class="fancyquote"');
+        t = t.rp(/\n>[ \t]*"(.*(?:\n>.*)*)"[ \t]*(?:\n>[ \t]*)?(\n>[ \t]{2,}\S.*)?\n/g, function(t, r, n) {
+            return e("blockquote", e("span", r.rp(/\n>/g, "\n") + "&rdquo;", A) + (n ? e("span", n.rp(/\n>/g, "\n"), s('class="author"')) : ""), A)
+        }), t = t.rp(/(?:\n>.*){2,}/g, function(t) {
+            return e("blockquote", t.rp(/\n>/g, "\n"))
+        }), t = t.rp(/\s*\[\^(.*?)\](?!:)/g, function(e, t) {
+            return t = t.toLowerCase().trim(), t in w || (++N, w[t] = N), "<sup><a " + s('href="#endnote-' + t + '"') + ">" + w[t] + "</a></sup>"
+        }), t = t.rp(/\[#(.*?)\](?!:)/g, function(e, t) {
             return t = t.trim(), "[<a " + s('href="#citation-' + t.toLowerCase() + '"') + ">" + t + "</a>]"
-        }), j = j.rp(/\n\[#(.*?)\]:((?:.+?\n?)*)/g, function(e, t, r) {
+        }), t = t.rp(/\n\[#(.*?)\]:((?:.+?\n?)*)/g, function(e, t, r) {
             return t = t.trim(), "<div " + s('class="bib"') + ">[<a " + s('name="citation-' + t.toLowerCase() + '"') + "></a><b>" + t + "</b>] " + r + "</div>"
-        }), j = u(j, s), j = j.rp(/^\[([^\^#].*?)\]:(.*?)$/gm, function(e, t, r) {
-            return N[t.toLowerCase().trim()] = r.trim(), ""
-        }), j = j.rp(/(?:<|(?!<)\b)(\S+@(\S+\.)+?\S{3,}?)(?:$|>|(?=<)|(?=\s)(?!>))/g, function(e, t) {
+        }), t = u(t, s), t = t.rp(/^\[([^\^#].*?)\]:(.*?)$/gm, function(e, t, r) {
+            return _[t.toLowerCase().trim()] = r.trim(), ""
+        }), t = t.rp(/(?:<|(?!<)\b)(\S+@(\S+\.)+?\S{3,}?)(?:$|>|(?=<)|(?=\s)(?!>))/g, function(e, t) {
             return "<a " + s('href="mailto:' + t + '"') + ">" + t + "</a>"
-        }), j = j.rp(/(?:\n\s*){2,}(!\[([\s\S]*?)\]\([^\t \)]+(.*?)\))(?:\s*\n){2,}/g, e("center", "$1")), j = j.rp(/!\[\]\(([^\t \)]+(.*?))\)/g, function(e, t) {
-            return "<img " + s('class="image" src="' + t + '"') + "/>"
-        }), j = j.rp(/!\[([\s\S]+?)?\]\(([^\t \)]+(.*?))\)/g, function(e, t, r) {
-            return "<div " + s('class="image"') + "><img " + s('class="markdeep" src="' + r + '"') + "/><div " + s('class="imagecaption"') + ">" + t + "</div></div>"
-        }), j = j.rp(/\[([^\[]+)\]\(([^\)]+?)\)/g, function(e, t, r) {
+        }), t = t.rp(/(\n[\t ]*){2}(!\[([\s\S]*?)\]\([^\t \)]+(.*?)\))(?=[ \t]*\n){2}/g, "$1" + e("center", "$2"));
+        var q = function(t, r, n) {
+            n = n || "";
+            var i, a;
+            return /(.mp4|.m4v|.avi|.mpg|.mov)$/i.test(r) ? i = "<video " + s('class="markdeep" src="' + r + '"' + n + ' width="480px" controls="true"') + "/>" : (a = r.match(/^https:\/\/(?:www\.)?youtube.com\/\S*?v=([\w\d-]+)(&.*)?$/i)) ? i = "<iframe " + s('class="markdeep" src="https://www.youtube.com/embed/' + a[1] + '"' + n + ' width="480px" height="300px" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen') + "></iframe>" : (a = r.match(/^https:\/\/(?:www\.)?vimeo.com\/\S*?\/([\w\d-]+)$/i)) ? i = "<iframe " + s('class="markdeep" src="https://player.vimeo.com/video/' + a[1] + '"' + n + ' width="480px" height="300px" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen') + "></iframe>" : (i = "<img " + s('class="markdeep" src="' + r + '"' + n) + "/>", /\b(width|height)\b/i.test(n) && (i = e("a ", i, s('href="' + r + '" target="_blank"')))), i
+        };
+        t = t.rp(/!\[\]\(([^\)\s]+?)([ \t].*?)?\)/g, q), t = t.rp(/!\[([\s\S]+?)?\]\(([^\)\s]+?)([ \t].*?)?\)/g, function(t, r, n, i) {
+            var a = q(t, n, i);
+            return e("div", a + e("div", r, s('class="imagecaption"')), s('class="image"'))
+        }), t = t.rp(/\[([^\[]+)\]\(([^\)]+?)\)/g, function(e, t, r) {
             return "<a " + s('href="' + r + '"') + ">" + t + "</a>"
-        }), j = l(j, /\*\*/, "strong", s('class="asterisk"')), j = l(j, /__/, "strong", s('class="underscore"')), j = l(j, /\*/, "em", s('class="asterisk"')), j = l(j, /_/, "em", s('class="underscore"')), j = j.rp(/\~\~([^~].*?)\~\~/g, e("del", "$1")), j = j.rp(/(^|[ \t->])(")(?=\w)/gm, "$1&ldquo;"), j = j.rp(/([\w\.,:;\?!=<])(")(?=$|\W)/gm, "$1&rdquo;"), j = j.rp(/(\s)==>(\s)/g, "$1&rarr;$2"), j = j.rp(/(\s)<==(\s)/g, "$1&larr;$2"), j = j.rp(/([^-!\:\|])---([^->\:\|])/g, "$1&mdash;$2"), j = j.rp(/([^-!\:\|])--([^->\:\|])/g, "$1&ndash;$2"), j = j.rp(/(\d+)x(\d+)/g, "$1&times;$2"), j = j.rp(/(\s)-(\d)/g, "$1&minus;$2"), j = j.rp(/(\d) - (\d)/g, "$1 &minus; $2"), t = j, t = p(t), t = d(t), t = t.rp(/(\d+?)[ \t-]degree(?:s?)/g, "$1&deg;"), t = t.rp(/\n[\s\n]*?\n/g, "\n\n</p><p>\n\n"), t = t.rp(/\[(.+?)\]\[(.*?)\]/g, function(e, t, r) {
-            return r.trim() || (r = t), r = r.toLowerCase().trim(), "<a " + s('href="' + N[r] + '"') + ">" + t + "</a>"
+        }), t = l(t, /\*\*/, "strong", s('class="asterisk"')), t = l(t, /__/, "strong", s('class="underscore"')), t = l(t, /\*/, "em", s('class="asterisk"')), t = l(t, /_/, "em", s('class="underscore"')), t = t.rp(/\~\~([^~].*?)\~\~/g, e("del", "$1")), t = t.rp(/(^|[ \t->])(")(?=\w)/gm, "$1&ldquo;"), t = t.rp(/([\w\.,:;\?!=<])(")(?=$|\W)/gm, "$1&rdquo;"), t = t.rp(/(\s)==>(\s)/g, "$1&rarr;$2"), t = t.rp(/(\s)<==(\s)/g, "$1&larr;$2"), t = t.rp(/([^-!\:\|])---([^->\:\|])/g, "$1&mdash;$2"), t = t.rp(/([^-!\:\|])--([^->\:\|])/g, "$1&ndash;$2"), t = t.rp(/(\d+)x(\d+)/g, "$1&times;$2"), t = t.rp(/(\s)-(\d)/g, "$1&minus;$2"), t = t.rp(/(\d) - (\d)/g, "$1 &minus; $2"), t = p(t, s), t = h(t), t = d(t, s), t = t.rp(/(\d+?)[ \t-]degree(?:s?)/g, "$1&deg;"), t = t.rp(/\n[\s\n]*?\n/g, "\n\n</p><p>\n\n"), t = t.rp(/\[(.+?)\]\[(.*?)\]/g, function(e, t, r) {
+            return r.trim() || (r = t), r = r.toLowerCase().trim(), "<a " + s('href="' + _[r] + '"') + ">" + t + "</a>"
         }), t = t.rp(/\n\[\^(.*?)\]:((?:.+?\n?)*)/g, function(e, t, r) {
-            return t = t.toLowerCase().trim(), t in x ? "\n<div " + s('class="endnote"') + "><a " + s('name="endnote-' + t + '"') + "></a><sup>" + x[t] + "</sup> " + r + "</div>" : "\n"
+            return t = t.toLowerCase().trim(), t in w ? "\n<div " + s('class="endnote"') + "><a " + s('name="endnote-' + t + '"') + "></a><sup>" + w[t] + "</sup> " + r + "</div>" : "\n"
         });
-        var A = t.match(/<h([1-6])>(.*?)<\/h\1>/gi);
-        A && A.forEach(function(e) {
+        var S = t.match(/<h([1-6])>(.*?)<\/h\1>/gi);
+        S && S.forEach(function(e) {
             e = i(e.ss(4, e.length - 5)).trim();
             var r = "<a " + s('href="#' + a(e) + '"') + ">";
-            t = t.rp(RegExp("(" + f(e) + ")(?=\\ssubsection|\\ssection)", "gi"), r + "$1</a>")
+            t = t.rp(RegExp("(" + b(e) + ")(?=\\ssubsection|\\ssection)", "gi"), r + "$1</a>")
         });
-        var S = {},
-            q = {};
+        var L = {},
+            R = {};
         if (t = t.rp(/($|>)\s*(figure|table|listing)\s\[(.+?)\]:/gim, function(t, r, n, i) {
                 n = n.toLowerCase();
-                var o = S[n] = (0 | S[n]) + 1,
+                var o = L[n] = (0 | L[n]) + 1,
                     i = n + "_" + a(i.toLowerCase().trim());
-                return q[i] = o, r + e("a", "", s('name="' + i + '"')) + e("b", n[0].toUpperCase() + n.ss(1) + " " + o + ":", s('style="font-style:normal;"'))
+                return R[i] = o, r + e("a", "", s('name="' + i + '"')) + e("b", n[0].toUpperCase() + n.ss(1) + " " + o + ":", s('style="font-style:normal;"'))
             }), t = t.rp(/\b(figure|fig\.|table|tbl\.|listing|lst.)\s\[(.+?)\]/gi, function(e, t, r) {
                 var n = t.toLowerCase();
                 switch (n) {
@@ -306,37 +401,37 @@
                         n = "listing"
                 }
                 var r = n + "_" + a(r.toLowerCase().trim()),
-                    i = q[r];
+                    i = R[r];
                 return i ? "<a " + s('href="#' + r + '"') + ">" + t + " " + i + "</a>" : t + " ?"
             }), t = t.rp(/(?:<|(?!<)\b)(\w{3,6}:\/\/.+?)(?:$|>|(?=<)|(?=\s)(?!<))/g, function(e, t) {
                 return "<a " + s('href="' + t + '"') + ">" + t + "</a>"
             }), !n) {
-            var L = /^\s*<strong.*?>([^ \t\*].*?[^ \t\*])<\/strong>[ \t]*\n/.source,
-                R = /([ {4,}\t][ \t]*\S.*\n)*/.source;
-            t = t.rp(RegExp(L + R, "g"), function(t, r) {
+            var T = /^\s*<strong.*?>([^ \t\*].*?[^ \t\*])<\/strong>[ \t]*\n/.source,
+                z = /([ {4,}\t][ \t]*\S.*\n)*/.source;
+            t = t.rp(RegExp(T + z, "g"), function(t, r) {
                 r = r.trim();
                 var n = t.ss(t.indexOf("\n", t.indexOf("</strong>")));
                 return n = n ? n.rp(/[ \t]*(\S.*?)\n/g, '<div class="subtitle"> $1 </div>\n') : "", e("title", i(r)) + '<div class="title"> ' + r + " </div>\n" + n + '<div class="afterTitles"></div>\n'
             })
         }
         if (!n) {
-            var z = h(t);
-            t = z[0];
-            var T = z[1];
+            var I = f(t);
+            t = I[0];
+            var O = I[1];
             t = t.rp(/\b(sec\.|section|subsection)\s\[(.+?)\]/gi, function(e, t, r) {
-                var n = T[r.toLowerCase().trim()];
+                var n = O[r.toLowerCase().trim()];
                 return n ? t + "  <a " + s('href="#toc' + n + '"') + ">" + n + "</a>" : t + " ?"
             })
         }
-        for (; t.indexOf(_) + 1;) t = t.rp(M, o);
+        for (; t.indexOf(k) + 1;) t = t.rp(j, o);
         return '<span class="md">' + e("p", t) + "</span>"
     }
 
-    function g(e) {
+    function m(e) {
         var t = e.split("\n"),
             r = 0;
         t.forEach(function(e) {
-            r = q(r, e.length)
+            r = L(r, e.length)
         });
         var n = Array(r + 1).join(" "),
             i = "";
@@ -345,13 +440,13 @@
         }), i
     }
 
-    function m(e) {
+    function v(e) {
         var t = e.split("\n"),
             r = 1 / 0;
         if (t.forEach(function(e) {
                 if ("" !== e.trim()) {
                     var t = e.match(/^([ \t]*)/);
-                    t && (r = L(r, t[0].length))
+                    t && (r = R(r, t[0].length))
                 }
             }), 0 === r) return e;
         var n = "";
@@ -360,13 +455,13 @@
         }), n
     }
 
-    function v(e, t) {
+    function y(e, t) {
         function n(e) {
-            return F.indexOf(e) + 1
+            return H.indexOf(e) + 1
         }
 
         function i(e) {
-            return -1 !== Z.indexOf(e)
+            return -1 !== W.indexOf(e)
         }
 
         function a(e) {
@@ -386,7 +481,7 @@
         }
 
         function l(e) {
-            return W.indexOf(e) + 1
+            return Z.indexOf(e) + 1
         }
 
         function u(e) {
@@ -394,11 +489,11 @@
         }
 
         function d(e) {
-            return "-" === e || n(e) || m(e)
+            return "-" === e || n(e) || g(e)
         }
 
         function p(e) {
-            return h(e) || m(e) || v(e)
+            return h(e) || g(e) || v(e)
         }
 
         function h(e) {
@@ -413,12 +508,12 @@
             return "\\" === e || n(e)
         }
 
-        function m(e) {
-            return H.indexOf(e) + 1
+        function g(e) {
+            return F.indexOf(e) + 1
         }
 
         function v(e) {
-            return U.indexOf(e) + 1
+            return D.indexOf(e) + 1
         }
 
         function y(e) {
@@ -444,7 +539,7 @@
                     o = t(e, r + 1),
                     c = t(e + 1, r - 1),
                     l = t(e - 1, r - 1);
-                return h(i) ? a(n) || "^" === n || h(n) || m(n) || s(o) || "v" === o || h(o) || m(o) || v(n) || v(o) || "_" === t(e, r - 1) || "_" === l || "_" === c || (a(l) || a(c)) && (s(t(e - 1, r + 1)) || s(t(e + 1, r + 1))) : a(i) || "^" === i ? h(o) || m(o) && "." !== i : s(i) || "v" === i ? h(n) || m(n) && "'" !== i : v(i) ? h(n) || h(o) : !1
+                return h(i) ? a(n) || "^" === n || h(n) || g(n) || s(o) || "v" === o || h(o) || g(o) || v(n) || v(o) || "_" === t(e, r - 1) || "_" === l || "_" === c || (a(l) || a(c)) && (s(t(e - 1, r + 1)) || s(t(e + 1, r + 1))) : a(i) || "^" === i ? h(o) || g(o) && "." !== i : s(i) || "v" === i ? h(n) || g(n) && "'" !== i : v(i) ? h(n) || h(o) : !1
             }, t.F = function(e, r) {
                 void 0 === r && (r = e.x, e = e.x);
                 var n = t(e - 2, r),
@@ -452,7 +547,7 @@
                     s = t(e + 0, r),
                     l = t(e + 1, r),
                     u = t(e + 2, r);
-                return d(s) || d(a) && m(s) ? d(a) ? d(l) || c(l) || d(n) || o(n) : o(a) ? d(l) : d(l) && (d(u) || c(u)) : "<" === s ? d(l) && d(u) : ">" === s ? d(a) && d(n) : i(s) ? d(a) && d(n) || d(l) && d(u) : !1
+                return d(s) || d(a) && g(s) ? d(a) ? d(l) || c(l) || d(n) || o(n) : o(a) ? d(l) : d(l) && (d(u) || c(u)) : "<" === s ? d(l) && d(u) : ">" === s ? d(a) && d(n) : i(s) ? d(a) && d(n) || d(l) && d(u) : !1
             }, t.G = function(e, r) {
                 void 0 === r && (r = e.x, e = e.x);
                 var n = t(e, r),
@@ -470,7 +565,7 @@
             }, Object.freeze(t)
         }
 
-        function $(e, t, r, n, i) {
+        function N(e, t, r, n, i) {
             this.A = e, this.B = t, r && (this.C = r, this.D = n ? n : r), this.dashed = i || !1, Object.freeze(this)
         }
 
@@ -478,7 +573,7 @@
             this.Z = []
         }
 
-        function B(e) {
+        function j(e) {
             return function(t, r) {
                 for (var n = 0; this.Z.length > n; ++n)
                     if (e.call(this.Z[n], t, r)) return !0;
@@ -486,14 +581,14 @@
             }
         }
 
-        function j() {
+        function E() {
             this._ = []
         }
 
-        function E(e, t) {
+        function B(e, t) {
             function r(t, r, n) {
-                var i, a, s = Math.sign(r.x - t.x),
-                    o = Math.sign(r.y - t.y);
+                var i, a, s = T(r.x - t.x),
+                    o = T(r.y - t.y);
                 for (i = t.x, a = t.y; i !== r.x || a !== r.y; i += s, a += o)
                     if (e(i, a) === n) return !0;
                 return e(i, a) === n
@@ -506,18 +601,18 @@
                         var l = x(n, o - 1),
                             u = e(c),
                             f = e(c.x, c.y - 1);
-                        (!i(u) && ("-" === f || "_" === f || "_" === e(c.x - 1, c.y - 1) || "_" === e(c.x + 1, c.y - 1) || s(f)) || m(f)) && (c.y -= .5);
+                        (!i(u) && ("-" === f || "_" === f || "_" === e(c.x - 1, c.y - 1) || "_" === e(c.x + 1, c.y - 1) || s(f)) || g(f)) && (c.y -= .5);
                         var b = e(l),
-                            g = e(l.x, l.y + 1);
-                        (!i(b) && ("-" === g || a(g)) || m(g) || "_" === e(l.x - 1, l.y) || "_" === e(l.x + 1, l.y)) && (l.y += .5), (c.x !== l.x || c.y !== l.y) && t.$(new $(c, l))
-                    } else "'" === e(n, o) && ("-" === e(n - 1, o) && "_" === e(n + 1, o - 1) && !p(e(n - 1, o - 1)) || "_" === e(n - 1, o - 1) && "-" === e(n + 1, o) && !p(e(n + 1, o - 1))) ? t.$(new $(x(n, o - .5), x(n, o))) : "." === e(n, o) && ("_" === e(n - 1, o) && "-" === e(n + 1, o) && !p(e(n + 1, o + 1)) || "-" === e(n - 1, o) && "_" === e(n + 1, o) && !p(e(n - 1, o + 1))) && t.$(new $(x(n, o), x(n, o + .5)));
+                            m = e(l.x, l.y + 1);
+                        (!i(b) && ("-" === m || a(m)) || g(m) || "_" === e(l.x - 1, l.y) || "_" === e(l.x + 1, l.y)) && (l.y += .5), (c.x !== l.x || c.y !== l.y) && t.$(new N(c, l))
+                    } else "'" === e(n, o) && ("-" === e(n - 1, o) && "_" === e(n + 1, o - 1) && !p(e(n - 1, o - 1)) || "_" === e(n - 1, o - 1) && "-" === e(n + 1, o) && !p(e(n + 1, o - 1))) ? t.$(new N(x(n, o - .5), x(n, o))) : "." === e(n, o) && ("_" === e(n - 1, o) && "-" === e(n + 1, o) && !p(e(n + 1, o + 1)) || "-" === e(n - 1, o) && "_" === e(n + 1, o) && !p(e(n - 1, o + 1))) && t.$(new N(x(n, o), x(n, o + .5)));
             for (var o = 0; e.height > o; ++o)
                 for (var n = 0; e.width > n; ++n)
                     if (e.F(n, o)) {
                         var c = x(n, o);
                         do e.q(n, o), ++n; while (e.F(n, o));
                         var l = x(n - 1, o);
-                        !i(e(c.x - 1, c.y)) && (a(e(c)) && p(e(c.x - 1, c.y + 1)) || s(e(c)) && p(e(c.x - 1, c.y - 1))) && ++c.x, !i(e(l.x + 1, l.y)) && (a(e(l)) && p(e(l.x + 1, l.y + 1)) || s(e(l)) && p(e(l.x + 1, l.y - 1))) && --l.x, (c.x !== l.x || c.y !== l.y) && t.$(new $(c, l))
+                        !i(e(c.x - 1, c.y)) && (a(e(c)) && p(e(c.x - 1, c.y + 1)) || s(e(c)) && p(e(c.x - 1, c.y - 1))) && ++c.x, !i(e(l.x + 1, l.y)) && (a(e(l)) && p(e(l.x + 1, l.y + 1)) || s(e(l)) && p(e(l.x + 1, l.y - 1))) && --l.x, (c.x !== l.x || c.y !== l.y) && t.$(new N(c, l))
                     }
             for (var y = -e.height; e.width > y; ++y)
                 for (var n = y, o = 0; e.height > o; ++o, ++n)
@@ -528,10 +623,10 @@
                         if (r(c, l, "\\")) {
                             var w = e(c),
                                 u = e(c.x, c.y - 1),
-                                N = e(c.x - 1, c.y - 1);
-                            "/" === u || "_" === N || "_" === u || !i(w) && (d(N) || h(N)) ? (c.x -= .5, c.y -= .5) : v(N) && (c.x -= .25, c.y -= .25);
-                            var _ = (e(l), e(l.x + 1, l.y + 1));
-                            "/" === e(l.x, l.y + 1) || "_" === e(l.x + 1, l.y) || "_" === e(l.x - 1, l.y) || !i(e(l)) && (d(_) || h(_)) ? (l.x += .5, l.y += .5) : v(_) && (l.x += .25, l.y += .25), t.$(new $(c, l))
+                                _ = e(c.x - 1, c.y - 1);
+                            "/" === u || "_" === _ || "_" === u || !i(w) && (d(_) || h(_)) ? (c.x -= .5, c.y -= .5) : v(_) && (c.x -= .25, c.y -= .25);
+                            var k = (e(l), e(l.x + 1, l.y + 1));
+                            "/" === e(l.x, l.y + 1) || "_" === e(l.x + 1, l.y) || "_" === e(l.x - 1, l.y) || !i(e(l)) && (d(k) || h(k)) ? (l.x += .5, l.y += .5) : v(k) && (l.x += .25, l.y += .25), t.$(new N(c, l))
                         }
                     }
             for (var y = -e.height; e.width > y; ++y)
@@ -545,29 +640,29 @@
                                 C = e(l.x + 1, l.y - 1);
                             e(l);
                             "\\" === u || "_" === u || "_" === C || !i(e(l)) && (d(C) || h(C)) ? (l.x += .5, l.y -= .5) : v(C) && (l.x += .25, l.y -= .25);
-                            var k = e(c.x - 1, c.y + 1),
+                            var $ = e(c.x - 1, c.y + 1),
                                 w = e(c);
-                            "\\" === e(c.x, c.y + 1) || "_" === e(c.x - 1, c.y) || "_" === e(c.x + 1, c.y) || !i(e(c)) && (d(k) || h(k)) ? (c.x -= .5, c.y += .5) : v(k) && (c.x -= .25, c.y += .25), t.$(new $(c, l))
+                            "\\" === e(c.x, c.y + 1) || "_" === e(c.x - 1, c.y) || "_" === e(c.x + 1, c.y) || !i(e(c)) && (d($) || h($)) ? (c.x -= .5, c.y += .5) : v($) && (c.x -= .25, c.y += .25), t.$(new N(c, l))
                         }
                     }
             for (var o = 0; e.height > o; ++o)
                 for (var n = 0; e.width > n; ++n) {
                     var M = e(n, o);
-                    a(M) && (d(e(n - 1, o)) && h(e(n + 1, o + 1)) && (e.q(n - 1, o), e.q(n, o), e.q(n + 1, o + 1), t.$(new $(x(n - 1, o), x(n + 1, o + 1), x(n + 1.1, o), x(n + 1, o + 1)))), d(e(n + 1, o)) && h(e(n - 1, o + 1)) && (e.q(n - 1, o + 1), e.q(n, o), e.q(n + 1, o), t.$(new $(x(n + 1, o), x(n - 1, o + 1), x(n - 1.1, o), x(n - 1, o + 1))))), ")" !== M && !v(M) || "." !== e(n - 1, o - 1) || "'" !== e(n - 1, o + 1) || (e.q(n, o), e.q(n - 1, o - 1), e.q(n - 1, o + 1), t.$(new $(x(n - 2, o - 1), x(n - 2, o + 1), x(n + .6, o - 1), x(n + .6, o + 1)))), "(" !== M && !v(M) || "." !== e(n + 1, o - 1) || "'" !== e(n + 1, o + 1) || (e.q(n, o), e.q(n + 1, o - 1), e.q(n + 1, o + 1), t.$(new $(x(n + 2, o - 1), x(n + 2, o + 1), x(n - .6, o - 1), x(n - .6, o + 1)))), s(M) && (d(e(n - 1, o)) && h(e(n + 1, o - 1)) && (e.q(n - 1, o), e.q(n, o), e.q(n + 1, o - 1), t.$(new $(x(n - 1, o), x(n + 1, o - 1), x(n + 1.1, o), x(n + 1, o - 1)))), d(e(n + 1, o)) && h(e(n - 1, o - 1)) && (e.q(n - 1, o - 1), e.q(n, o), e.q(n + 1, o), t.$(new $(x(n + 1, o), x(n - 1, o - 1), x(n - 1.1, o), x(n - 1, o - 1)))))
+                    a(M) && (d(e(n - 1, o)) && h(e(n + 1, o + 1)) && (e.q(n - 1, o), e.q(n, o), e.q(n + 1, o + 1), t.$(new N(x(n - 1, o), x(n + 1, o + 1), x(n + 1.1, o), x(n + 1, o + 1)))), d(e(n + 1, o)) && h(e(n - 1, o + 1)) && (e.q(n - 1, o + 1), e.q(n, o), e.q(n + 1, o), t.$(new N(x(n + 1, o), x(n - 1, o + 1), x(n - 1.1, o), x(n - 1, o + 1))))), ")" !== M && !v(M) || "." !== e(n - 1, o - 1) || "'" !== e(n - 1, o + 1) || (e.q(n, o), e.q(n - 1, o - 1), e.q(n - 1, o + 1), t.$(new N(x(n - 2, o - 1), x(n - 2, o + 1), x(n + .6, o - 1), x(n + .6, o + 1)))), "(" !== M && !v(M) || "." !== e(n + 1, o - 1) || "'" !== e(n + 1, o + 1) || (e.q(n, o), e.q(n + 1, o - 1), e.q(n + 1, o + 1), t.$(new N(x(n + 2, o - 1), x(n + 2, o + 1), x(n - .6, o - 1), x(n - .6, o + 1)))), s(M) && (d(e(n - 1, o)) && h(e(n + 1, o - 1)) && (e.q(n - 1, o), e.q(n, o), e.q(n + 1, o - 1), t.$(new N(x(n - 1, o), x(n + 1, o - 1), x(n + 1.1, o), x(n + 1, o - 1)))), d(e(n + 1, o)) && h(e(n - 1, o - 1)) && (e.q(n - 1, o - 1), e.q(n, o), e.q(n + 1, o), t.$(new N(x(n + 1, o), x(n - 1, o - 1), x(n - 1.1, o), x(n - 1, o - 1)))))
                 }
             for (var o = 0; e.height > o; ++o)
                 for (var n = 0; e.width - 2 > n; ++n)
                     if ("_" === e(n, o) && "_" === e(n + 1, o)) {
                         var c = x(n - .5, o + .5),
-                            B = e(n - 1, o),
-                            j = e(n - 2, o);
-                        "|" === B || "|" === e(n - 1, o + 1) || "." === B || "'" === e(n - 1, o + 1) ? (c.x -= .5, "." !== B || "-" !== j && "." !== j || "(" !== e(n - 2, o + 1) || (c.x -= .5)) : "/" === B && (c.x -= 1), "(" === B && "(" === j && "'" === e(n, o + 1) && "." === e(n, o - 1) && (c.x += .5), B = j = void 0;
+                            j = e(n - 1, o),
+                            E = e(n - 2, o);
+                        "|" === j || "|" === e(n - 1, o + 1) || "." === j || "'" === e(n - 1, o + 1) ? (c.x -= .5, "." !== j || "-" !== E && "." !== E || "(" !== e(n - 2, o + 1) || (c.x -= .5)) : "/" === j && (c.x -= 1), "(" === j && "(" === E && "'" === e(n, o + 1) && "." === e(n, o - 1) && (c.x += .5), j = E = void 0;
                         do e.q(n, o), ++n; while ("_" === e(n, o));
                         var l = x(n - .5, o + .5),
                             M = e(n, o),
-                            E = e(n + 1, o),
+                            B = e(n + 1, o),
                             b = e(n, o + 1);
-                        "|" === M || "|" === b || "." === M || "'" === b ? (l.x += .5, "." !== M || "-" !== E && "." !== E || ")" !== e(n + 1, o + 1) || (l.x += .5)) : "\\" === M && (l.x += 1), ")" === M && ")" === E && "'" === e(n - 1, o + 1) && "." === e(n - 1, o - 1) && (l.x += -.5), t.$(new $(c, l))
+                        "|" === M || "|" === b || "." === M || "'" === b ? (l.x += .5, "." !== M || "-" !== B && "." !== B || ")" !== e(n + 1, o + 1) || (l.x += .5)) : "\\" === M && (l.x += 1), ")" === M && ")" === B && "'" === e(n - 1, o + 1) && "." === e(n - 1, o - 1) && (l.x += -.5), t.$(new N(c, l))
                     }
         }
 
@@ -583,7 +678,7 @@
                 for (var s = 0; e.height > s; ++s) {
                     var o = e(a, s),
                         c = s;
-                    if (m(o)) t.U(a, c - .5) && t.O(a, c + .5) && (r.$(a, c, o), e.q(a, c));
+                    if (g(o)) t.U(a, c - .5) && t.O(a, c + .5) && (r.$(a, c, o), e.q(a, c));
                     else if (v(o)) {
                         var d = e(a, c - 1),
                             p = e(a, c + 1),
@@ -594,29 +689,29 @@
                     else if (u(o)) r.$(a, c, o), e.q(a, c);
                     else {
                         var b = 0;
-                        ">" === o && (t.W(a, c) || t.Y(a, c)) ? (v(e(a + 1, c)) && (b = -.5), r.$(a + b, c, ">", 0), e.q(a, c)) : "<" === o && (t.V(a, c) || t.Y(a, c)) ? (v(e(a - 1, c)) && (b = .5), r.$(a + b, c, ">", 180), e.q(a, c)) : "^" === o ? t.O(a, c - .5) ? (r.$(a, c - .5, ">", 270), e.q(a, c)) : t.O(a, c) ? (r.$(a, c, ">", 270), e.q(a, c)) : t.P(a + .5, c - .5) ? (r.$(a + .5, c - .5, ">", 270 + T), e.q(a, c)) : t.P(a + .25, c - .25) ? (r.$(a + .25, c - .25, ">", 270 + T), e.q(a, c)) : t.P(a, c) ? (r.$(a, c, ">", 270 + T), e.q(a, c)) : t.S(a, c) ? (r.$(a, c, o, 270 - T), e.q(a, c)) : t.S(a - .5, c - .5) ? (r.$(a - .5, c - .5, o, 270 - T), e.q(a, c)) : t.S(a - .25, c - .25) ? (r.$(a - .25, c - .25, o, 270 - T), e.q(a, c)) : t.X(a, c) && (r.$(a, c - .5, ">", 270), e.q(a, c)) : "v" === o && (t.U(a, c + .5) ? (r.$(a, c + .5, ">", 90), e.q(a, c)) : t.U(a, c) ? (r.$(a, c, ">", 90), e.q(a, c)) : t.R(a, c) ? (r.$(a, c, ">", 90 + T), e.q(a, c)) : t.R(a - .5, c + .5) ? (r.$(a - .5, c + .5, ">", 90 + T), e.q(a, c)) : t.R(a - .25, c + .25) ? (r.$(a - .25, c + .25, ">", 90 + T), e.q(a, c)) : t.T(a, c) ? (r.$(a, c, ">", 90 - T), e.q(a, c)) : t.T(a + .5, c + .5) ? (r.$(a + .5, c + .5, ">", 90 - T), e.q(a, c)) : t.T(a + .25, c + .25) ? (r.$(a + .25, c + .25, ">", 90 - T), e.q(a, c)) : t.X(a, c) && (r.$(a, c + .5, ">", 90), e.q(a, c)))
+                        ">" === o && (t.W(a, c) || t.Y(a, c)) ? (v(e(a + 1, c)) && (b = -.5), r.$(a + b, c, ">", 0), e.q(a, c)) : "<" === o && (t.V(a, c) || t.Y(a, c)) ? (v(e(a - 1, c)) && (b = .5), r.$(a + b, c, ">", 180), e.q(a, c)) : "^" === o ? t.O(a, c - .5) ? (r.$(a, c - .5, ">", 270), e.q(a, c)) : t.O(a, c) ? (r.$(a, c, ">", 270), e.q(a, c)) : t.P(a + .5, c - .5) ? (r.$(a + .5, c - .5, ">", 270 + I), e.q(a, c)) : t.P(a + .25, c - .25) ? (r.$(a + .25, c - .25, ">", 270 + I), e.q(a, c)) : t.P(a, c) ? (r.$(a, c, ">", 270 + I), e.q(a, c)) : t.S(a, c) ? (r.$(a, c, o, 270 - I), e.q(a, c)) : t.S(a - .5, c - .5) ? (r.$(a - .5, c - .5, o, 270 - I), e.q(a, c)) : t.S(a - .25, c - .25) ? (r.$(a - .25, c - .25, o, 270 - I), e.q(a, c)) : t.X(a, c) && (r.$(a, c - .5, ">", 270), e.q(a, c)) : "v" === o && (t.U(a, c + .5) ? (r.$(a, c + .5, ">", 90), e.q(a, c)) : t.U(a, c) ? (r.$(a, c, ">", 90), e.q(a, c)) : t.R(a, c) ? (r.$(a, c, ">", 90 + I), e.q(a, c)) : t.R(a - .5, c + .5) ? (r.$(a - .5, c + .5, ">", 90 + I), e.q(a, c)) : t.R(a - .25, c + .25) ? (r.$(a - .25, c + .25, ">", 90 + I), e.q(a, c)) : t.T(a, c) ? (r.$(a, c, ">", 90 - I), e.q(a, c)) : t.T(a + .5, c + .5) ? (r.$(a + .5, c + .5, ">", 90 - I), e.q(a, c)) : t.T(a + .25, c + .25) ? (r.$(a + .25, c + .25, ">", 90 - I), e.q(a, c)) : t.X(a, c) && (r.$(a, c + .5, ">", 90), e.q(a, c)))
                     }
                 }
         }
-        e = g(e);
-        var S = "\ue004";
-        e = e.rp(/([a-z]|[A-Z])o([a-z]|[A-Z])/g, "$1" + S + "$2");
-        var R = 8,
+        e = m(e);
+        var q = "\ue004";
+        e = e.rp(/([a-z]|[A-Z])o([a-z]|[A-Z])/g, "$1" + q + "$2");
+        var S = 8,
             z = 2,
-            T = 180 * Math.atan(1 / z) / Math.PI,
-            I = 1e-6,
-            O = ">v<^",
-            U = "o*",
-            H = "()",
-            F = "+",
-            Z = F + ".'",
-            W = "\u2591\u2592\u2593\u2594\u2589",
+            I = 180 * Math.atan(1 / z) / Math.PI,
+            O = 1e-6,
+            U = ">v<^",
+            D = "o*",
+            F = "()",
+            H = "+",
+            W = H + ".'",
+            Z = "\u2591\u2592\u2593\u2594\u2589",
             K = "\u25e2\u25e3\u25e4\u25e5",
-            P = O + U + H + W + K;
+            P = U + D + F + Z + K;
         x.prototype.toString = x.prototype.toSVG = function() {
-            return "" + this.x * R + "," + this.y * R * z + " "
+            return "" + this.x * S + "," + this.y * S * z + " "
         };
-        var Q = $.prototype;
+        var Q = N.prototype;
         Q.I = function() {
             return this.B.x === this.A.x
         }, Q.J = function() {
@@ -624,17 +719,17 @@
         }, Q.K = function() {
             var e = this.B.x - this.A.x,
                 t = this.B.y - this.A.y;
-            return Math.abs(t + e) < I
+            return Math.abs(t + e) < O
         }, Q.L = function() {
             var e = this.B.x - this.A.x,
                 t = this.B.y - this.A.y;
-            return Math.abs(t - e) < I
+            return Math.abs(t - e) < O
         }, Q.M = function() {
             return void 0 !== this.C
         }, Q.N = function(e, t) {
             return void 0 === t && (t = e.y, e = e.x), this.A.x === e && this.A.y === t || this.B.x === e && this.B.y === t
         }, Q.O = function(e, t) {
-            return void 0 === t && (t = e.y, e = e.x), this.I() && this.A.x === e && L(this.A.y, this.B.y) === t
+            return void 0 === t && (t = e.y, e = e.x), this.I() && this.A.x === e && R(this.A.y, this.B.y) === t
         }, Q.P = function(e, t) {
             return this.K() ? (void 0 === t && (t = e.y, e = e.x), this.B.y > this.A.y ? this.A.x === e && this.A.y === t : this.B.x === e && this.B.y === t) : !1
         }, Q.R = function(e, t) {
@@ -644,28 +739,28 @@
         }, Q.T = function(e, t) {
             return this.L() ? (void 0 === t && (t = e.y, e = e.x), this.A.y > this.B.y ? this.A.x === e && this.A.y === t : this.B.x === e && this.B.y === t) : !1
         }, Q.U = function(e, t) {
-            return void 0 === t && (t = e.y, e = e.x), this.I() && this.A.x === e && q(this.A.y, this.B.y) === t
+            return void 0 === t && (t = e.y, e = e.x), this.I() && this.A.x === e && L(this.A.y, this.B.y) === t
         }, Q.V = function(e, t) {
-            return void 0 === t && (t = e.y, e = e.x), this.J() && this.A.y === t && L(this.A.x, this.B.x) === e
+            return void 0 === t && (t = e.y, e = e.x), this.J() && this.A.y === t && R(this.A.x, this.B.x) === e
         }, Q.W = function(e, t) {
-            return void 0 === t && (t = e.y, e = e.x), this.J() && this.A.y === t && q(this.A.x, this.B.x) === e
+            return void 0 === t && (t = e.y, e = e.x), this.J() && this.A.y === t && L(this.A.x, this.B.x) === e
         }, Q.X = function(e, t) {
-            return void 0 === t && (t = e.y, e = e.x), this.I() && this.A.x === e && L(this.A.y, this.B.y) <= t && q(this.A.y, this.B.y) >= t
+            return void 0 === t && (t = e.y, e = e.x), this.I() && this.A.x === e && R(this.A.y, this.B.y) <= t && L(this.A.y, this.B.y) >= t
         }, Q.Y = function(e, t) {
-            return void 0 === t && (t = e.y, e = e.x), this.J() && this.A.y === t && L(this.A.x, this.B.x) <= e && q(this.A.x, this.B.x) >= e
+            return void 0 === t && (t = e.y, e = e.x), this.J() && this.A.y === t && R(this.A.x, this.B.x) <= e && L(this.A.x, this.B.x) >= e
         }, Q.toSVG = function() {
             var e = '<path d="M ' + this.A;
             return e += this.M() ? "C " + this.C + this.D + this.B : "L " + this.B, e += '" style="fill:none;stroke:#000;"', this.dashed && (e += ' stroke-dasharray="3,6"'), e += "/>"
         };
-        var D = M.prototype;
-        D.$ = function(e) {
+        var V = M.prototype;
+        V.$ = function(e) {
             this.Z.push(e)
-        }, D.O = B(Q.O), D.P = B(Q.P), D.S = B(Q.S), D.R = B(Q.R), D.T = B(Q.T), D.U = B(Q.U), D.V = B(Q.V), D.W = B(Q.W), D.N = B(Q.N), D.X = B(Q.X), D.Y = B(Q.Y), D.toSVG = function() {
+        }, V.O = j(Q.O), V.P = j(Q.P), V.S = j(Q.S), V.R = j(Q.R), V.T = j(Q.T), V.U = j(Q.U), V.V = j(Q.V), V.W = j(Q.W), V.N = j(Q.N), V.X = j(Q.X), V.Y = j(Q.Y), V.toSVG = function() {
             for (var e = "", t = 0; this.Z.length > t; ++t) e += this.Z[t].toSVG() + "\n";
             return e
         };
-        var V = j.prototype;
-        V.$ = function(e, t, r, n) {
+        var G = E.prototype;
+        G.$ = function(e, t, r, n) {
             void 0 === r && (r = t, t = e.y, e = e.x), !y(r);
             var i = {
                 C: x(e, t),
@@ -673,26 +768,26 @@
                 angle: n || 0
             };
             v(r) ? this._.push(i) : this._.unshift(i)
-        }, V.toSVG = function() {
+        }, G.toSVG = function() {
             for (var e = "", t = 0; this._.length > t; ++t) {
                 var r = this._[t],
                     n = r.C;
-                if (m(r.type)) {
+                if (g(r.type)) {
                     var i = ")" === r.type ? .75 : -.75,
                         a = x(n.x, n.y - .5),
                         s = x(n.x, n.y + .5),
                         o = x(n.x + i, n.y - .5),
                         c = x(n.x + i, n.y + .5);
                     e += '<path d="M ' + s + " C " + c + o + a + '" style="fill:none;stroke:#000;"/>'
-                } else if (v(r.type)) e += '<circle cx="' + n.x * R + '" cy="' + n.y * R * z + '" r="' + (R - k) + '" style="fill:' + ("*" === r.type ? "#000" : "#FFF") + ';stroke:#000;"/>';
+                } else if (v(r.type)) e += '<circle cx="' + n.x * S + '" cy="' + n.y * S * z + '" r="' + (S - $) + '" style="fill:' + ("*" === r.type ? "#000" : "#FFF") + ';stroke:#000;"/>';
                 else if (l(r.type)) {
-                    var d = Math.round(63.75 * (3 - W.indexOf(r.type)));
-                    e += '<rect x="' + (n.x - .5) * R + '" y="' + (n.y - .5) * R * z + '" width="' + R + '" height="' + R * z + '" fill="rgb(' + d + "," + d + "," + d + ')"/>'
+                    var d = Math.round(63.75 * (3 - Z.indexOf(r.type)));
+                    e += '<rect x="' + (n.x - .5) * S + '" y="' + (n.y - .5) * S * z + '" width="' + S + '" height="' + S * z + '" fill="rgb(' + d + "," + d + "," + d + ')"/>'
                 } else if (u(r.type)) {
                     var p = K.indexOf(r.type),
                         h = .5 - (1 & p),
                         f = .5 - (p >> 1);
-                    h *= Math.sign(f);
+                    h *= T(f);
                     var b = x(n.x + h, n.y - f),
                         a = x(n.x + h, n.y + f),
                         s = x(n.x - h, n.y + f);
@@ -706,103 +801,106 @@
             }
             return e
         };
-        var G = w(e),
-            X = new M,
-            J = new j;
-        E(G, X), A(G, X, J);
-        var Y = '<svg class="diagram" xmlns="http://www.w3.org/2000/svg" version="1.1" height="' + (G.height + 1) * R * z + '" width="' + (G.width + 1) * R + '"';
-        if ("floatleft" === t ? Y += ' style="float:left;margin: 15px 30px 15px 0px;"' : "floatright" === t ? Y += ' style="float:right;margin: 15px 0px 15px 30px;"' : "center" === t && (Y += ' style="margin: 0px auto 0px auto;"'), Y += '><g transform="translate(' + x(1, 1) + ')">\n', N) {
-            Y += '<g style="opacity:0.1">\n';
-            for (var ee = 0; G.width > ee; ++ee)
-                for (var te = 0; G.height > te; ++te) Y += '<rect x="' + ((ee - .5) * R + 1) + '" + y="' + ((te - .5) * R * z + 2) + '" width="' + (R - 2) + '" height="' + (R * z - 2) + '" style="fill:', Y += G.s(ee, te) ? "red;" : " " === G(ee, te) ? "gray; opacity:0.05" : "blue;", Y += '"/>\n';
-            Y += "</g>\n"
+        var Y = w(e),
+            J = new M,
+            X = new E;
+        B(Y, J), A(Y, J, X);
+        var ee = '<svg class="diagram" xmlns="http://www.w3.org/2000/svg" version="1.1" height="' + (Y.height + 1) * S * z + '" width="' + (Y.width + 1) * S + '"';
+        if ("floatleft" === t ? ee += ' style="float:left;margin: 15px 30px 15px 0px;"' : "floatright" === t ? ee += ' style="float:right;margin: 15px 0px 15px 30px;"' : "center" === t && (ee += ' style="margin: 0px auto 0px auto;"'), ee += '><g transform="translate(' + x(1, 1) + ')">\n', _) {
+            ee += '<g style="opacity:0.1">\n';
+            for (var te = 0; Y.width > te; ++te)
+                for (var re = 0; Y.height > re; ++re) ee += '<rect x="' + ((te - .5) * S + 1) + '" + y="' + ((re - .5) * S * z + 2) + '" width="' + (S - 2) + '" height="' + (S * z - 2) + '" style="fill:', ee += Y.s(te, re) ? "red;" : " " === Y(te, re) ? "gray; opacity:0.05" : "blue;", ee += '"/>\n';
+            ee += "</g>\n"
         }
-        if (Y += X.toSVG(), Y += J.toSVG(), !C) {
-            Y += '<g transform="translate(0,0)">';
-            for (var te = 0; G.height > te; ++te)
-                for (var ee = 0; G.width > ee; ++ee) {
-                    var re = G(ee, te);
-                    /[\u2B22\u2B21]/.test(re) ? Y += '<text text-anchor="middle" x="' + ee * R + '" y="' + (4 + te * R * z) + '" style="fill:#000;font-size:20.5px">' + r(re) + "</text>" : " " === re || G.s(ee, te) || (Y += '<text text-anchor="middle" x="' + ee * R + '" y="' + (4 + te * R * z) + '" style="fill:#000">' + r(re) + "</text>")
+        if (ee += J.toSVG(), ee += X.toSVG(), !C) {
+            ee += '<g transform="translate(0,0)">';
+            for (var re = 0; Y.height > re; ++re)
+                for (var te = 0; Y.width > te; ++te) {
+                    var ne = Y(te, re);
+                    /[\u2B22\u2B21]/.test(ne) ? ee += '<text text-anchor="middle" x="' + te * S + '" y="' + (4 + re * S * z) + '" style="fill:#000;font-size:20.5px">' + r(ne) + "</text>" : " " === ne || Y.s(te, re) || (ee += '<text text-anchor="middle" x="' + te * S + '" y="' + (4 + re * S * z) + '" style="fill:#000">' + r(ne) + "</text>")
                 }
-            Y += "</g>"
+            ee += "</g>"
         }
-        if (_) {
-            Y += '<g transform="translate(2, 2)">\n';
-            for (var ee = 0; G.width > ee; ++ee)
-                for (var te = 0; G.height > te; ++te) {
-                    var re = G(ee, te);
-                    " " !== re && (Y += '<text text-anchor="middle" x="' + ee * R + '" y="' + (4 + te * R * z) + '" style="fill:#F00;font-family:Menlo,monospace;font-size:12px;text-align:center">' + r(re) + "</text>")
+        if (k) {
+            ee += '<g transform="translate(2, 2)">\n';
+            for (var te = 0; Y.width > te; ++te)
+                for (var re = 0; Y.height > re; ++re) {
+                    var ne = Y(te, re);
+                    " " !== ne && (ee += '<text text-anchor="middle" x="' + te * S + '" y="' + (4 + re * S * z) + '" style="fill:#F00;font-family:Menlo,monospace;font-size:12px;text-align:center">' + r(ne) + "</text>")
                 }
-            Y += "</g>"
+            ee += "</g>"
         }
-        return Y += "</g></svg>", Y = Y.rp(RegExp(S, "g"), "o")
-    }
-
-    function y(e) {
-        return -1 !== e.search(/markdeep\S*?\.js$/i)
+        return ee += "</g></svg>", ee = ee.rp(RegExp(q, "g"), "o")
     }
 
     function x(e) {
+        return -1 !== e.search(/markdeep\S*?\.js$/i)
+    }
+
+    function w(e) {
         return Array.prototype.slice.call(e)
     }
-    var w = String.prototype;
-    w.rp = w.replace, w.ss = w.substring;
-    var N = !1,
-        _ = N,
-        C = _,
-        k = 2,
-        $ = "*",
-        M = Array(6).join($),
-        B = e("style", 'body { max-width: 680px;margin:auto;padding:20px;text-align:justify;line-height:140%; color:#222;font-family: Palatino,Georgia,"Times New Roman",serif;}'),
-        j = e("style", "body{counter-reset: h1 h2 h3 h4 h5 h6;}.md div.title{font-size:26px;font-weight:800;padding-bottom:5px;line-height:120%;text-align:center;}.md div.afterTitles{height:10px;}.md div.subtitle{text-align:center;}.md .image{display:inline-block}.md div.imagecaption,.md div.tablecaption,.md div.listingcaption{margin:10px 0 10px 0;font-style:italic;}.md div.tilde{margin:20px 0 -10px 0;text-align:center;}.md div.title,h1,h2,h3,h4,h5,h6, .md .shortTOC,.md .longTOC{font-family:Verdana,Helvetica,Arial,sans-serif;}.md svg.diagram{display:block;font-family:Menlo,'Lucida Console',monospace;font-size:13.1px;text-align:center;stroke-linecap:round;stroke-width:" + k + "px;}h1{padding-bottom:3px;padding-top:15px;border-bottom:3px solid;border-top:none;font-size:20px;counter-reset: h2 h3 h4 h5 h6;clear:both;}h2{counter-reset: h3 h4 h5 h6;font-family:Helvetica,Arial,sans-serif;padding-bottom:3px;padding-top:15px;border-bottom:2px solid #999;border-top:none;color:#555;font-size:18px;clear:both;}h3,h4,h5,h6{font-family:Helvetica,Arial,sans-serif;padding-bottom:3px;padding-top:15px;border-top:none;color:#555;font-size:16px;clear:both;}h3{counter-reset: h4 h5 h6;}h4{counter-reset: h5 h6;}h5{counter-reset: h6;}.md table.table{margin:auto;border-collapse:collapse;}.md div.tablecaption{text-align: center;}.md table.table th{color:#FFF;background-color:#AAA;border:1px solid #888;padding:8px 15px 8px 15px;}.md table.table td{padding:5px 15px 5px 15px;border:1px solid #888;}.md table.table tr:nth-child(even){background:#EEE;}.md pre.tilde{border-top: 1px solid #CCC;border-bottom: 1px solid #CCC;padding: 5px 0 5px 20px;margin-bottom: 30px;background: #FCFCFC;}.md a:link, .md a:visited{color:#38A;text-decoration:none;}.md a:hover{text-decoration:underline}.md dt{font-weight:700;}.md dd{padding-bottom:18px;}.md code{white-space:pre;}.md .endnote{font-size:13px;line-height:15px;padding-left:10px;text-indent:-10px;}.md .bib{padding-left:80px;text-indent:-80px;text-align:left;}.markdeepFooter{font-size:9px;text-align:right;padding-top:80px;color:#999;}.md .longTOC{float:right;font-size:12px;line-height:15px;border-left:1px solid #CCC;padding-left:15px;margin:15px 0px 15px 25px;}.md .shortTOC{text-align:center;font-weight:bold;margin-top:15px;font-size:14px;}"),
-        E = '<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>',
-        A = '<div class="markdeepFooter"><i>formatted by <a href="http://casual-effects.com/markdeep" style="color:#999">Markdeep&nbsp;&nbsp;&nbsp;</a></i><div style="display:inline-block;font-size:13px;font-family:\'Times New Roman\',serif;vertical-align:middle;transform:translate(-3px,-1px)rotate(135deg);">&#x2712;</div></div>',
+    var N = String.prototype;
+    N.rp = N.replace, N.ss = N.substring;
+    var _ = !1,
+        k = _,
+        C = k,
+        $ = 2,
+        M = "*",
+        j = Array(6).join(M),
+        E = e("style", 'body { max-width: 680px;margin:auto;padding:20px;text-align:justify;line-height:140%; color:#222;font-family: Palatino,Georgia,"Times New Roman",serif;}'),
+        B = e("style", "body{counter-reset: h1 h2 h3 h4 h5 h6;}.md div.title{font-size:26px;font-weight:800;padding-bottom:5px;line-height:120%;text-align:center;}.md div.afterTitles{height:10px;}.md div.subtitle{text-align:center;}.md .image{display:inline-block}.md div.imagecaption,.md div.tablecaption,.md div.listingcaption{margin:10px 0 10px 0;font-style:italic;}.md div.tilde{margin:20px 0 -10px 0;text-align:center;}.md blockquote.fancyquote{margin-top:25px;margin-bottom:25px;text-align:left;line-height:160%;}.md blockquote.fancyquote:before{color: #DDD;content: \"\u201c\";font-family:Times New Roman;font-size: 45px;line-height: 0;margin-right: 6px;vertical-align: -0.3em;}.md span.fancyquote{font-size:118%;color:#777;font-style:italic;}.md blockquote.fancyquote .author{width:100%;margin-top: 10px;display:inline-block;text-align:right;}.md div.title,h1,h2,h3,h4,h5,h6, .md .shortTOC,.md .longTOC{font-family:Verdana,Helvetica,Arial,sans-serif;}.md svg.diagram{display:block;font-family:Menlo,'Lucida Console',monospace;font-size:13.1px;text-align:center;stroke-linecap:round;stroke-width:" + $ + "px;}h1{padding-bottom:3px;padding-top:15px;border-bottom:3px solid;border-top:none;font-size:20px;counter-reset: h2 h3 h4 h5 h6;clear:both;}h2{counter-reset: h3 h4 h5 h6;font-family:Helvetica,Arial,sans-serif;padding-bottom:3px;padding-top:15px;border-bottom:2px solid #999;border-top:none;color:#555;font-size:18px;clear:both;}h3,h4,h5,h6{font-family:Helvetica,Arial,sans-serif;padding-bottom:3px;padding-top:15px;border-top:none;color:#555;font-size:16px;clear:both;}h3{counter-reset: h4 h5 h6;}h4{counter-reset: h5 h6;}h5{counter-reset: h6;}.md table{border-collapse:collapse;line-height:140%; }.md table.table{margin:auto;}.md table.calendar{width:100%;margin:auto;font-size:11px;font-family:Helvetica,Arial,sans-serif;}.md table.calendar th{font-size:16px;}.md .today{background:#ECF8FA;}.md div.tablecaption{text-align: center;}.md table.table th{color:#FFF;background-color:#AAA;border:1px solid #888;padding:8px 15px 8px 15px;}.md table.table td{padding:5px 15px 5px 15px;border:1px solid #888;}.md table.table tr:nth-child(even){background:#EEE;}.md pre.tilde{border-top: 1px solid #CCC;border-bottom: 1px solid #CCC;padding: 5px 0 5px 20px;margin-bottom: 30px;background: #FCFCFC;}.md a:link, .md a:visited{color:#38A;text-decoration:none;}.md a:hover{text-decoration:underline}.md dt{font-weight:700;}.md dd{padding-bottom:18px;}.md code{white-space:pre;}.md .endnote{font-size:13px;line-height:15px;padding-left:10px;text-indent:-10px;}.md .bib{padding-left:80px;text-indent:-80px;text-align:left;}.markdeepFooter{font-size:9px;text-align:right;padding-top:80px;color:#999;}.md .longTOC{float:right;font-size:12px;line-height:15px;border-left:1px solid #CCC;padding-left:15px;margin:15px 0px 15px 25px;}.md .shortTOC{text-align:center;font-weight:bold;margin-top:15px;font-size:14px;}"),
+        A = '<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>',
+        q = '<div class="markdeepFooter"><i>formatted by <a href="http://casual-effects.com/markdeep" style="color:#999">Markdeep&nbsp;&nbsp;&nbsp;</a></i><div style="display:inline-block;font-size:13px;font-family:\'Times New Roman\',serif;vertical-align:middle;transform:translate(-3px,-1px)rotate(135deg);">&#x2712;</div></div>',
         S = {
             mode: "markdeep",
             detectMath: !0
         },
-        q = Math.max,
-        L = Math.min,
-        R = "<style>.hljs{display:block;overflow-x:auto;padding:0.5em;background:#fff;color:#000;-webkit-text-size-adjust:none}.hljs-comment{color:#006a00}.hljs-keyword,.hljs-literal,.nginx .hljs-title{color:#aa0d91}.method,.hljs-list .hljs-title,.hljs-tag .hljs-title,.setting .hljs-value,.hljs-winutils,.tex .hljs-command,.http .hljs-title,.hljs-request,.hljs-status,.hljs-name{color:#008}.hljs-envvar,.tex .hljs-special{color:#660}.hljs-string{color:#c41a16}.hljs-tag .hljs-value,.hljs-cdata,.hljs-filter .hljs-argument,.hljs-attr_selector,.apache .hljs-cbracket,.hljs-date,.hljs-regexp{color:#080}.hljs-sub .hljs-identifier,.hljs-pi,.hljs-tag,.hljs-tag .hljs-keyword,.hljs-decorator,.ini .hljs-title,.hljs-shebang,.hljs-prompt,.hljs-hexcolor,.hljs-rule .hljs-value,.hljs-symbol,.hljs-symbol .hljs-string,.hljs-number,.css .hljs-function,.hljs-function .hljs-title,.coffeescript .hljs-attribute{color:#1c00cf}.hljs-class .hljs-title,.smalltalk .hljs-class,.hljs-type,.hljs-typename,.hljs-tag .hljs-attribute,.hljs-doctype,.hljs-class .hljs-id,.hljs-built_in,.setting,.hljs-params,.clojure .hljs-attribute{color:#5c2699}.hljs-variable{color:#3f6e74}.css .hljs-tag,.hljs-rule .hljs-property,.hljs-pseudo,.hljs-subst{color:#000}.css .hljs-class,.css .hljs-id{color:#9b703f}.hljs-value .hljs-important{color:#ff7700;font-weight:bold}.hljs-rule .hljs-keyword{color:#c5af75}.hljs-annotation,.apache .hljs-sqbracket,.nginx .hljs-built_in{color:#9b859d}.hljs-preprocessor,.hljs-preprocessor *,.hljs-pragma{color:#643820}.tex .hljs-formula{background-color:#eee;font-style:italic}.diff .hljs-header,.hljs-chunk{color:#808080;font-weight:bold}.diff .hljs-change{background-color:#bccff9}.hljs-addition{background-color:#baeeba}.hljs-deletion{background-color:#ffc8bd}.hljs-comment .hljs-doctag{font-weight:bold}.method .hljs-id{color:#000}</style>";
+        L = Math.max,
+        R = Math.min,
+        T = Math.sign || function(e) {
+            return +e === e ? 0 === e ? e : e > 0 ? 1 : -1 : NaN;
+        },
+        z = "<style>.hljs{display:block;overflow-x:auto;padding:0.5em;background:#fff;color:#000;-webkit-text-size-adjust:none}.hljs-comment{color:#006a00}.hljs-keyword,.hljs-literal,.nginx .hljs-title{color:#aa0d91}.method,.hljs-list .hljs-title,.hljs-tag .hljs-title,.setting .hljs-value,.hljs-winutils,.tex .hljs-command,.http .hljs-title,.hljs-request,.hljs-status,.hljs-name{color:#008}.hljs-envvar,.tex .hljs-special{color:#660}.hljs-string{color:#c41a16}.hljs-tag .hljs-value,.hljs-cdata,.hljs-filter .hljs-argument,.hljs-attr_selector,.apache .hljs-cbracket,.hljs-date,.hljs-regexp{color:#080}.hljs-sub .hljs-identifier,.hljs-pi,.hljs-tag,.hljs-tag .hljs-keyword,.hljs-decorator,.ini .hljs-title,.hljs-shebang,.hljs-prompt,.hljs-hexcolor,.hljs-rule .hljs-value,.hljs-symbol,.hljs-symbol .hljs-string,.hljs-number,.css .hljs-function,.hljs-function .hljs-title,.coffeescript .hljs-attribute{color:#1c00cf}.hljs-class .hljs-title,.smalltalk .hljs-class,.hljs-type,.hljs-typename,.hljs-tag .hljs-attribute,.hljs-doctype,.hljs-class .hljs-id,.hljs-built_in,.setting,.hljs-params,.clojure .hljs-attribute{color:#5c2699}.hljs-variable{color:#3f6e74}.css .hljs-tag,.hljs-rule .hljs-property,.hljs-pseudo,.hljs-subst{color:#000}.css .hljs-class,.css .hljs-id{color:#9b703f}.hljs-value .hljs-important{color:#ff7700;font-weight:bold}.hljs-rule .hljs-keyword{color:#c5af75}.hljs-annotation,.apache .hljs-sqbracket,.nginx .hljs-built_in{color:#9b859d}.hljs-preprocessor,.hljs-preprocessor *,.hljs-pragma{color:#643820}.tex .hljs-formula{background-color:#eee;font-style:italic}.diff .hljs-header,.hljs-chunk{color:#808080;font-weight:bold}.diff .hljs-change{background-color:#bccff9}.hljs-addition{background-color:#baeeba}.hljs-deletion{background-color:#ffc8bd}.hljs-comment .hljs-doctag{font-weight:bold}.method .hljs-id{color:#000}</style>";
     if (!window.alreadyProcessedMarkdeep) {
         window.alreadyProcessedMarkdeep = !0;
-        var z = -1 !== window.location.href.search(/\?.*noformat.*/i);
+        var I = -1 !== window.location.href.search(/\?.*noformat.*/i);
         window.markdeep = Object.freeze({
-            format: b,
-            formatDiagram: v,
+            format: g,
+            formatDiagram: y,
             stylesheet: function() {
-                return j + s() + R
+                return B + s() + z
             }
         });
-        var T = t("mode");
-        switch (T) {
+        var O = t("mode");
+        switch (O) {
             case "script":
                 return;
             case "html":
             case "doxygen":
-                return x(document.getElementsByClassName("diagram")).concat(x(document.getElementsByTagName("diagram"))).forEach(function(e) {
+                return w(document.getElementsByClassName("diagram")).concat(w(document.getElementsByTagName("diagram"))).forEach(function(e) {
                     var t = n(e.innerHTML);
-                    t = t.rp(/(:?^[ \t]*\n)|(:?\n[ \t]*)$/g, ""), "doxygen" === T && (t = t.rp(RegExp("\u2013", "g"), "--"), t = t.rp(RegExp("\u2014", "g"), "---"), t = t.rp(/<a class="el" .*>(.*)<\/a>/g, "$1")), e.outerHTML = '<center class="md">' + v(m(t), "") + "</center>"
-                }), x(document.getElementsByClassName("markdeep")).concat(x(document.getElementsByTagName("markdeep"))).forEach(function(e) {
+                    t = t.rp(/(:?^[ \t]*\n)|(:?\n[ \t]*)$/g, ""), "doxygen" === O && (t = t.rp(RegExp("\u2013", "g"), "--"), t = t.rp(RegExp("\u2014", "g"), "---"), t = t.rp(/<a class="el" .*>(.*)<\/a>/g, "$1")), e.outerHTML = '<center class="md">' + y(v(t), "") + "</center>"
+                }), w(document.getElementsByClassName("markdeep")).concat(w(document.getElementsByTagName("markdeep"))).forEach(function(e) {
                     var t = document.createElement("div");
-                    t.innerHTML = b(m(n(e.innerHTML)), !0), e.parentNode.replaceChild(t, e)
+                    t.innerHTML = g(v(n(e.innerHTML)), !0), e.parentNode.replaceChild(t, e)
                 }), void(document.head.innerHTML = window.markdeep.stylesheet() + document.head.innerHTML)
         }
-        z || (x(document.getElementsByTagName("script")).forEach(function(e) {
-            y(e.src) && e.parentNode.removeChild(e)
+        I || (w(document.getElementsByTagName("script")).forEach(function(e) {
+            x(e.src) && e.parentNode.removeChild(e)
         }), document.body.style.visibility = "hidden");
-        var I = o(document.body);
-        if (z) return I = I.rp(/<!-- Markdeep:.+$/gm, "") + E, I = I.rp(/</g, "&lt;").rp(/>/g, "&gt;"), void(document.body.innerHTML = e("pre", I));
-        I = n(I), setTimeout(function() {
-            var r = b(I, !1),
+        var U = o(document.body);
+        if (I) return U = U.rp(/<!-- Markdeep:.+$/gm, "") + A, U = U.rp(/</g, "&lt;").rp(/>/g, "&gt;"), void(document.body.innerHTML = e("pre", U));
+        U = n(U), setTimeout(function() {
+            var r = g(U, !1),
                 n = t("detectMath") && (-1 !== r.search(/(?:\$\$[\s\S]+\$\$)|(?:\\begin{)/m) || -1 !== r.search(/\\\(.*\\\)/));
             if (n) {
                 var i = "$$NC{\\n}{\\hat{n}}NC{\\w}{\\hat{\\omega}}NC{\\wi}{\\w_\\mathrm{i}}NC{\\wo}{\\w_\\mathrm{o}}NC{\\wh}{\\w_\\mathrm{h}}NC{\\Li}{L_\\mathrm{i}}NC{\\Lo}{L_\\mathrm{o}}NC{\\Le}{L_\\mathrm{e}}NC{\\Lr}{L_\\mathrm{r}}NC{\\Lt}{L_\\mathrm{t}}NC{\\O}{\\mathrm{O}}NC{\\degrees}{{^\\circ}}NC{\\T}{\\mathsf{T}}NC{\\mathset}[1]{\\mathbb{#1}}NC{\\Real}{\\mathset{R}}NC{\\Integer}{\\mathset{Z}}NC{\\Boolean}{\\mathset{B}}NC{\\Complex}{\\mathset{C}}$$\n".rp(/NC/g, "\\newcommand");
                 r = '<script type="text/x-mathjax-config">MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });</script><span style="display:none">' + i + "</span>\n" + r
             }
-            r += A;
-            var a = I.length > 1e3,
-                o = B + j + s() + R;
+            r += q;
+            var a = U.length > 1e3,
+                o = E + B + s() + z;
             if (a && (o += e("style", "div.title { padding-top: 40px; } div.afterTitles { height: 15px; }")), document.head.innerHTML = '<meta charset="UTF-8"><meta http-equiv="content-type" content="text/html; charset=UTF-8">' + o + document.head.innerHTML, document.body.innerHTML = r, document.body.style.visibility = "visible", n) {
                 var c = document.createElement("script");
                 c.type = "text/javascript", c.src = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML", document.getElementsByTagName("head")[0].appendChild(c)
@@ -835,7 +933,7 @@
         var t, r, n, a = e.className + " ";
         if (a += e.parentNode ? e.parentNode.className : "", r = /\blang(?:uage)?-([\w-]+)\b/i.exec(a)) return x(r[1]) ? r[1] : "no-highlight";
         for (a = a.split(/\s+/), t = 0, n = a.length; n > t; t++)
-            if (x(a[t]) || i(a[t])) return a[t];
+            if (x(a[t]) || i(a[t])) return a[t]
     }
 
     function s(e, t) {
@@ -968,76 +1066,76 @@
         }
 
         function f() {
-            if (!C.k) return t(M);
+            if (!k.k) return t(M);
             var e = "",
                 r = 0;
-            C.lR.lastIndex = 0;
-            for (var n = C.lR.exec(M); n;) {
+            k.lR.lastIndex = 0;
+            for (var n = k.lR.exec(M); n;) {
                 e += t(M.substr(r, n.index - r));
-                var i = p(C, n);
-                i ? (B += i[1], e += h(i[0], t(n[0]))) : e += t(n[0]), r = C.lR.lastIndex, n = C.lR.exec(M)
+                var i = p(k, n);
+                i ? (j += i[1], e += h(i[0], t(n[0]))) : e += t(n[0]), r = k.lR.lastIndex, n = k.lR.exec(M)
             }
             return e + t(M.substr(r))
         }
 
         function b() {
-            var e = "string" == typeof C.sL;
-            if (e && !N[C.sL]) return t(M);
-            var r = e ? u(C.sL, M, !0, k[C.sL]) : d(M, C.sL.length ? C.sL : void 0);
-            return C.r > 0 && (B += r.r), e && (k[C.sL] = r.top), h(r.language, r.value, !1, !0)
+            var e = "string" == typeof k.sL;
+            if (e && !N[k.sL]) return t(M);
+            var r = e ? u(k.sL, M, !0, C[k.sL]) : d(M, k.sL.length ? k.sL : void 0);
+            return k.r > 0 && (j += r.r), e && (C[k.sL] = r.top), h(r.language, r.value, !1, !0)
         }
 
         function g() {
-            return void 0 !== C.sL ? b() : f()
+            return void 0 !== k.sL ? b() : f()
         }
 
         function m(e, r) {
             var n = e.cN ? h(e.cN, "", !0) : "";
-            e.rB ? ($ += n, M = "") : e.eB ? ($ += t(r) + n, M = "") : ($ += n, M = r), C = Object.create(e, {
+            e.rB ? ($ += n, M = "") : e.eB ? ($ += t(r) + n, M = "") : ($ += n, M = r), k = Object.create(e, {
                 parent: {
-                    value: C
+                    value: k
                 }
             })
         }
 
         function v(e, r) {
             if (M += e, void 0 === r) return $ += g(), 0;
-            var n = s(r, C);
+            var n = s(r, k);
             if (n) return $ += g(), m(n, r), n.rB ? 0 : r.length;
-            var i = o(C, r);
+            var i = o(k, r);
             if (i) {
-                var a = C;
+                var a = k;
                 a.rE || a.eE || (M += r), $ += g();
-                do C.cN && ($ += "</span>"), B += C.r, C = C.parent; while (C != i.parent);
+                do k.cN && ($ += "</span>"), j += k.r, k = k.parent; while (k != i.parent);
                 return a.eE && ($ += t(r)), M = "", i.starts && m(i.starts, ""), a.rE ? 0 : r.length
             }
-            if (c(r, C)) throw Error('Illegal lexeme "' + r + '" for mode "' + (C.cN || "<unnamed>") + '"');
+            if (c(r, k)) throw Error('Illegal lexeme "' + r + '" for mode "' + (k.cN || "<unnamed>") + '"');
             return M += r, r.length || 1
         }
         var y = x(e);
         if (!y) throw Error('Unknown language: "' + e + '"');
         l(y);
-        var _, C = a || y,
-            k = {},
+        var _, k = a || y,
+            C = {},
             $ = "";
-        for (_ = C; _ != y; _ = _.parent) _.cN && ($ = h(_.cN, "", !0) + $);
+        for (_ = k; _ != y; _ = _.parent) _.cN && ($ = h(_.cN, "", !0) + $);
         var M = "",
-            B = 0;
+            j = 0;
         try {
-            for (var j, E, A = 0; C.t.lastIndex = A, j = C.t.exec(r), j;) E = v(r.substr(A, j.index - A), j[0]), A = j.index + E;
-            for (v(r.substr(A)), _ = C; _.parent; _ = _.parent) _.cN && ($ += "</span>");
+            for (var E, B, A = 0; k.t.lastIndex = A, E = k.t.exec(r), E;) B = v(r.substr(A, E.index - A), E[0]), A = E.index + B;
+            for (v(r.substr(A)), _ = k; _.parent; _ = _.parent) _.cN && ($ += "</span>");
             return {
-                r: B,
+                r: j,
                 value: $,
                 language: e,
-                top: C
+                top: k
             }
-        } catch (S) {
-            if (-1 != S.message.indexOf("Illegal")) return {
+        } catch (q) {
+            if (-1 != q.message.indexOf("Illegal")) return {
                 r: 0,
                 value: t(r)
             };
-            throw S
+            throw q
         }
     }
 
