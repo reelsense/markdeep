@@ -176,6 +176,19 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2016-02-02 Version 0.09: References and Internal Links
+    1. Added support for schedule lists
+    2. 10x performance increase over version 0.08
+    3. Added IE11 support
+    4. Added support for calendars
+    5. Added support for HTML attributes on images
+    6. Added support for video
+    7. Added CSS classes for different list bullets
+    8. Added support for Youtube and Vimeo video
+    9. Fixed multiple centered images in a group
+    10. Fixed multiple colons in schedule event titles
+    11. Added fancy quotes
+    12. Highlighted current day on calendars
 
   * 2016-01-18 Version 0.08: References and Internal Links
     1. Prevented HTML tags in the title from appearing in the browser tab
