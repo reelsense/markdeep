@@ -176,6 +176,22 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2016-03-22 Version 0.10: Calendars and Images
+    1. Fixed alignment in table cells
+    2. Added support for links with no text
+    3. Added starter.md.html to web page
+    4. Switched default raw URL font to Georgia for more weight and better slashes
+    5. Table of contents now becomes its own section if it is longer than the abstract
+    6. Added support for Latex equation, eqnarray, and equation* environments
+    7. Fixed current-day highlighting on calendars
+    8. Fixed multiple single-$ Latex expressions on a single line
+    9. Allowed definition list terms to begin with non-word characters
+    10. Added support for daylight saving time independent of country
+    11. Improved robustness of parsing links within image captions
+    12. Added support for floating, captioned images
+    13. Fixed centering of multiple images in separate blocks
+    14. Allowed definition lists to have a single space between the colon and definition
+
   * 2016-02-02 Version 0.09: References and Internal Links
     1. Added support for schedule lists
     2. 10x performance increase over version 0.08
