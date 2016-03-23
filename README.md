@@ -4,11 +4,9 @@ This is an unofficial un-minified version of ``markdeep.mini.js``.
 
 http://casual-effects.com/markdeep/
 
-As of ``0.10`` (2016-03-22), releases are signed with [Minisign](https://jedisct1.github.io/minisign/).
+**As of ``0.10`` (2016-03-22), releases are signed with** [Minisign](https://jedisct1.github.io/minisign/).
 
-Minisign is a ‘dead simple tool to sign files and verify signatures’.
-
-Signed files will be accompanied by a corresponding ``*.minisig`` file.
+Minisign is a ‘dead simple tool to sign files and verify signatures’. Signed files will be accompanied by a corresponding ``*.minisig`` file.
 
 You can verify the signature using [my Minisign public key](http://reelsense.tv/keys):
 
