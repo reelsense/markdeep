@@ -4,6 +4,19 @@ This is an unofficial un-minified version of ``markdeep.mini.js``.
 
 http://casual-effects.com/markdeep/
 
+As of ``0.10`` (2016-03-22), releases are signed with [Minisign](https://jedisct1.github.io/minisign/).
+
+Minisign is a ‘dead simple tool to sign files and verify signatures’.
+
+Signed files will be accompanied by a corresponding ``*.minisig`` file.
+
+You can verify the signature using [my Minisign public key](http://reelsense.tv/keys):
+
+
+```
+minisign -Vm <file> -P RWSmY4o5Bad1vS60aYAiQUswWYVV2EuSdqc3ry7CWWF1E6bVbFG9kR/y
+```
+
 **Markdeep** is a technology for writing plain text documents that will look good in any web browser. It supports diagrams, common styling conventions, and equations as extensions of Markdown syntax.
 
 Markdeep is free and easy to use. It doesn't need a plugin, or Internet connection. There's nothing to install. Just start writing in Vi, Nodepad, Emacs, Visual Studio, Atom, or another editor! You don't have to export, compile, or otherwise process your document.
