@@ -187,6 +187,25 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2016-05-06 Version 0.11: Integration
+    1. Added ?export option to extract raw HTML
+    2. Switched to font-rendering: antialiased; for lighter fonts
+    3. Added support for numeric exponents outside of math mode
+    4. Made spaces in figure/listing/table references unbreakable
+    5. Fixed processing of max-width and width on images
+    6. Added default max-width of 100% on images (can be overriden per image)
+    7. Extended minus-sign beautification to negative numbers immediately following an open parenthesis
+    8. Tweaked code syntax highlighting
+    9. Updated to use highlight.js 0.9.3
+    10. Fixed smart quotes after numbers
+    11. Made fancy quotes fully CSS-stylable
+    12. Made diagrams CSS-stylable
+    13. Protected style tags
+    14. Protected table of contents link names
+    15. Fixed long table of contents link to first section
+    16.
+    17. Added gravizo support
+
   * 2016-03-22 Version 0.10: Calendars and Images
     1. Fixed alignment in table cells
     2. Added support for links with no text
