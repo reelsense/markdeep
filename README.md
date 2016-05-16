@@ -187,6 +187,8 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2016-05-14 STANDBY Morgan erased /0.11/markdeep.min.js from his server. Wish he used version control.
+
   * 2016-05-06 Version 0.11: Integration
     1. Added ?export option to extract raw HTML
     2. Switched to font-rendering: antialiased; for lighter fonts
