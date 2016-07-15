@@ -187,6 +187,14 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2016-06-28 Version 0.12: Localization
+    1. Prevented double underscores in variable names inside of diagrams, e.g., ``__FILE__``, from being parsed as lines
+    2. Prevented decoration characters from being stripped from diagrams when on false-diagonal lines composed entirely of decorations
+    3. Matched fixed-width fonts between diagrams and code blocks, and code block font sizes across platforms
+    4. Added localization support via markdeepOptions.lang and ``<meta lang="..." ...>``
+    5. Increased robustness of section links
+    6. Added unnumbered sections using (#)
+
   * 2016-05-14 STANDBY Morgan erased /0.11/markdeep.min.js from his server. Wish he used version control.
 
   * 2016-05-06 Version 0.11: Integration
