@@ -187,6 +187,20 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2016-08-01 Version 0.13: Book support
+    1. Added support for youtu.be URL shortened videos
+    2. Documented lang advanced option
+    3. Exposed tocStyle advanced option
+    4. Added support for multiple entries per date in schedule lists
+    5. Added support for auto-hiding weekends in schedule lists
+    6. Switched all date computations to UTC to avoid daylight time problems
+    7. Added parenthesized entries for schedule lists
+    8. Added support for arbitrary attributes on regular links
+    9. Terse formatting for definition lists with short definitions
+    10. Fixed fancy quotes in non-unicode documents
+    11. Reduced file size slightly
+    12. Improved syntax auto-highlighting in code blocks
+
   * 2016-06-28 Version 0.12: Localization
     1. Prevented double underscores in variable names inside of diagrams, e.g., ``__FILE__``, from being parsed as lines
     2. Prevented decoration characters from being stripped from diagrams when on false-diagonal lines composed entirely of decorations
