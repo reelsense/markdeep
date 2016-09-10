@@ -15,6 +15,32 @@ You can verify the signature using [my Minisign public key](http://reelsense.tv/
 minisign -Vm <file> -P RWSmY4o5Bad1vS60aYAiQUswWYVV2EuSdqc3ry7CWWF1E6bVbFG9kR/y
 ```
 
+You can authenticate the key *above* by copying the signature *below*, into [keybase.io/verify](https://keybase.io/verify). It's signed by [14C1182BC57936B2](http://reelsense.tv/keys).
+
+```
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+RWSmY4o5Bad1vS60aYAiQUswWYVV2EuSdqc3ry7CWWF1E6bVbFG9kR/y
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAABCgAGBQJX010gAAoJEBTBGCvFeTayH+UP/2cc+UNhGyDdLACyv7+eHI93
+NAdskZQ+d8iiOkxgiMXoTg3W9/B6skRL5eZIX1QTgg7xldVcczOUr9/7/fGhQMHB
+vEU6RwB/SnyRSqPiqnbsP8K7Xl6GHty2VorIKWR3zPCFSdMq2sOYJVXR0IZrB5O5
+jMzkBLZQMUH+fgeiapassjN8hzl8Gc0A8HO48MVSsS2MQx05DN9uqAnX5XzY6dQL
+jA9AatVTsx904fgz3TJogEOCoEbPSl02zZ5J5uRGMA5e5cyWU9+rTL4hhN/6HrAA
+6Oe4ihEEGECTxC59LEgbPTxka8QU0ngrgVzrJZxBI7Q05oyznGazFWtJz53cxp60
+b8jBht+PeVBnoKCodmAZu54N3f5BTNMldivvclRJDv0TAOJZK/UJW52BdBqrEHek
+luFxCBlJ7MQe56fiQwCS1+KIBTTOzxFtQAi35gcZv/mqb2WRMBJWCtB4f0NC9TqT
+BShvxk8N4z7yVZiykjpdHxslNtfoVR1iRcZ0+xVQBtT+pEdl5ONexSazUsvKXGxR
+g9IKP0qTNBu38lHDZSABsb3b+WTax+xDd/mcZC3SJO9aFXPP0uoL0ON1JpB/d0FQ
+54ixCr4VK9aO9RNZuvV9yYKWTsNXh3hqY+AuRfv4Cv0YkEnqKVgUUozIkSI9WP57
+rkYQXUCXXP1XUMDpJCfo
+=BL+u
+-----END PGP SIGNATURE-----
+```
+[signature mirror](http://reelsense.tv/public-key-rwsmy4o5bad1vs60ayaiquswwyvv2eusdqc3ry7cwwf1e6bvbfg9kr/y)
+
 **Markdeep** is a technology for writing plain text documents that will look good in any web browser. It supports diagrams, common styling conventions, and equations as extensions of Markdown syntax.
 
 Markdeep is free and easy to use. It doesn't need a plugin, or Internet connection. There's nothing to install. Just start writing in Vi, Nodepad, Emacs, Visual Studio, Atom, or another editor! You don't have to export, compile, or otherwise process your document.
