@@ -15,7 +15,7 @@ You can verify the signature using [my Minisign public key](http://reelsense.tv/
 minisign -Vm <file> -P RWSmY4o5Bad1vS60aYAiQUswWYVV2EuSdqc3ry7CWWF1E6bVbFG9kR/y
 ```
 
-You can authenticate the key *above* by copying the signature *below*, into [keybase.io/verify](https://keybase.io/verify). It's signed by [14C1182BC57936B2](http://reelsense.tv/keys).
+Authenticate the key *above* by copying the signature *below*, into [keybase.io/verify](https://keybase.io/verify). It's signed by [14C1182BC57936B2](http://reelsense.tv/keys).
 
 ```
 -----BEGIN PGP SIGNED MESSAGE-----
