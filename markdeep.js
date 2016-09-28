@@ -1,6 +1,6 @@
 /**
   markdeep.js
-  Version 0.13
+  Version 0.14
 
   Copyright 2015-2016, Morgan McGuire, http://casual-effects.com
   All rights reserved.
@@ -24,12 +24,12 @@
   You may use, extend, and redistribute this code under the terms of
   the BSD license at https://opensource.org/licenses/BSD-2-Clause.
 
-  Contains highlight.js 9.5.0 (https://github.com/isagalaev/highlight.js) by Ivan
+  Contains highlight.js (https://github.com/isagalaev/highlight.js) by Ivan
   Sagalaev, which is used for code highlighting. (BSD 3-clause license)
 */
 /**See http://casual-effects.com/markdeep for @license and documentation.
-markdeep.min.js (C) 2016 Morgan McGuire
-highlight.min.js  (C) 2016 Ivan Sagalaev https://highlightjs.org/*/
+markdeep.min.js 0.13 (C) 2016 Morgan McGuire
+highlight.min.js 9.5.0 (C) 2016 Ivan Sagalaev https://highlightjs.org/*/
 (function() {
 'use strict';
 
@@ -559,7 +559,7 @@ function unescapeHTMLEntities(str) {
         rp(/&gt;/g, '>').
         rp(/&quot;/g, '"').
         rp(/&#39;/g, "'").
-        rp(/&ndash;/g, '--').
+        rp(/&ndash;/g, '\u2013').
         rp(/&mdash;/g, '---').
         rp(/&amp;/g, '&');
 }
@@ -850,7 +850,7 @@ function replaceLists(s, protect) {
     var PREFIX     = /[:,]\s*\n/.source;
     var LIST_BLOCK_REGEXP =
         new RegExp('(' + PREFIX + '|' + BLANK_LINES + ')' +
-                   /((?:[ \t]*(?:\d+\.|-|\+|\*)(?:[ \t]+.+\n\n?)+)+)/.source, 'gm');
+                   /((?:[ \t]*(?:\d+\.|-|\+|\*)(?:[ \t]+.+\n(?:[ \t]*\n)?)+)+)/.source, 'gm');
 
     var keepGoing = true;
 
@@ -874,7 +874,6 @@ function replaceLists(s, protect) {
                stack.forEach(function(v) { s += v.indentLevel + ', '; });
                console.log(s.ss(0, s.length - 2) + ']');
                } */
-
             block.split('\n').forEach(function (line) {
                 var trimmed     = line.rp(/^\s*/, '');
 
@@ -886,8 +885,7 @@ function replaceLists(s, protect) {
                 attribs = attribs || NUMBER_ATTRIBS;
                 var isOrdered   = /^\d+\.[ \t]/.test(trimmed);
 
-                // If not ordered or unordered, we're just looking at a blank line
-
+                // If not ordered or unordered, then we're just looking at a blank line
                 if (! current) {
                     // Went above top-level indent
                     result += '\n' + line;
@@ -901,7 +899,7 @@ function replaceLists(s, protect) {
                             while (current && (indentLevel < current.indentLevel)) {
                                 stack.pop();
                                 // End the current list and decrease indentation
-                                result += '</li></' + current.tag + '>';
+                                result += '\n</li></' + current.tag + '>';
                                 current = stack[stack.length - 1];
                             }
                         } else {
@@ -910,11 +908,11 @@ function replaceLists(s, protect) {
                                        tag:         isOrdered ? 'ol' : 'ul',
                                        indentChars: line.ss(0, indentLevel)};
                             stack.push(current);
-                            result += '<' + current.tag + '>';
+                            result += '\n<' + current.tag + '>';
                         }
                     } else if (current.indentLevel !== -1) {
                         // End previous list item, if there was one
-                        result += '</li>';
+                        result += '\n</li>';
                     } // Indent level changed
 
                     if (current) {
@@ -1281,7 +1279,7 @@ function replaceDefinitionLists(s, protect) {
                  });
 
                  var result = '';
-                 if (longestDefinition < 128) {
+                 if (longestDefinition < 160) {
                      var rowAttribs = protect('valign=top');
                      // This list has short definitions. Format it as a table
                      list.forEach(function (entry) {
@@ -1369,8 +1367,7 @@ function insertTableOfContents(s, protect) {
     // The location of the first header is indicative of the length of
     // the abstract...as well as where we insert. The first header may be accompanied by
     // <a name> tags, which we want to appear before.
-    var firstHeaderLocation = s.regexIndexOf(/((<a\s+\S+><\/a>)\s*)*<h1>/i);
-
+    var firstHeaderLocation = s.regexIndexOf(/((<a\s+\S+><\/a>)\s*)*?<h\d>/i);
     if (firstHeaderLocation === -1) { firstHeaderLocation = 0; }
 
     var AFTER_TITLES = '<div class="afterTitles"><\/div>';
@@ -1472,13 +1469,17 @@ function markdeepToHTML(str, elementMode) {
 
     // In the private use area
     var PROTECT_CHARACTER = '\ue010';
-    var PROTECT_RADIX     = 36;
+
+    // Use base 36 for encoding numbers
+    var PROTECT_RADIX     = 35;
     var protectedStringArray = [];
 
-    // Gives 1.7M possible sequences in base 36
+    // Gives 1.5M possible sequences in base 56
     var PROTECT_DIGITS    = 4;
 
-    var PROTECT_REGEXP    = RegExp(PROTECT_CHARACTER + '[0-9a-z]{' + PROTECT_DIGITS + ',' + PROTECT_DIGITS + '}', 'g');
+    // Put the protect character at BOTH ends to avoid having the protected number encoding
+    // look like an actual number to further markdown processing
+    var PROTECT_REGEXP    = RegExp(PROTECT_CHARACTER + '[0-9a-wyz]{' + PROTECT_DIGITS + ',' + PROTECT_DIGITS + '}' + PROTECT_CHARACTER, 'g');
 
     /** Given an arbitrary string, returns an escaped identifier
         string to temporarily replace it with to prevent Markdeep from
@@ -1486,11 +1487,16 @@ function markdeepToHTML(str, elementMode) {
     function protect(s) {
         var i = (protectedStringArray.push(s) - 1).toString(PROTECT_RADIX);
 
+        // Avoid the pattern "#x#", which Markdeep would interpret as a dimension eligible for
+        // beautification.
+        i = i.rp(/x/gi, 'z');
+
+        // Ensure fixed length
         while (i.length < PROTECT_DIGITS) {
             i = '0' + i;
         }
 
-        return PROTECT_CHARACTER + i;
+        return PROTECT_CHARACTER + i + PROTECT_CHARACTER;
     }
 
     /** Given the escaped identifier string from protect(), returns
@@ -1498,8 +1504,8 @@ function markdeepToHTML(str, elementMode) {
     function expose(i) {
         // Strip the escape character and parse, then look up in the
         // dictionary.
-        var i = parseInt(i.ss(1), PROTECT_RADIX);
-        return protectedStringArray[i];
+        var j = parseInt(i.ss(1, i.length - 1).rp(/z/g, 'x'), PROTECT_RADIX);
+        return protectedStringArray[j];
     }
 
     /** First-class function to pass to String.replace to protect a
@@ -1697,8 +1703,9 @@ function markdeepToHTML(str, elementMode) {
     });
 
 
-    // FOOTNOTES/ENDNOTES: [^symbolic name]
-    str = str.rp(/\s*\[\^(.*?)\](?!:)/g, function (match, symbolicName) {
+    // FOOTNOTES/ENDNOTES: [^symbolic name]. Disallow spaces in footnote names to
+    // make parsing unambiguous
+    str = str.rp(/\s*\[\^(\S+)\](?!:)/g, function (match, symbolicName) {
         symbolicName = symbolicName.toLowerCase().trim();
 
         if (! (symbolicName in endNoteTable)) {
@@ -1712,14 +1719,14 @@ function markdeepToHTML(str, elementMode) {
 
     // CITATIONS: [#symbolicname]
     // The reference:
-    str = str.rp(/\[#(.*?)\](?!:)/g, function (match, symbolicName) {
+    str = str.rp(/\[#(\S+)\](?!:)/g, function (match, symbolicName) {
         symbolicName = symbolicName.trim();
         return '[<a ' + protect('href="#citation-' + symbolicName.toLowerCase() + '"') +
             '>' + symbolicName + '</a>]';
     });
 
     // The bibliography entry:
-    str = str.rp(/\n\[#(.*?)\]:((?:.+?\n?)*)/g, function (match, symbolicName, entry) {
+    str = str.rp(/\n\[#(\S+)\]: ((?:.+?\n?)*)/g, function (match, symbolicName, entry) {
         symbolicName = symbolicName.trim();
         return '<div ' + protect('class="bib"') + '>[<a ' + protect('name="citation-' + symbolicName.toLowerCase() + '"') +
             '></a><b>' + symbolicName + '</b>] ' + entry + '</div>';
@@ -1770,6 +1777,7 @@ function markdeepToHTML(str, elementMode) {
         return img;
     };
 
+
     // Process links before images so that captions can contain links
 
     // Detect gravizo URLs inside of markdown images and protect them,
@@ -1790,6 +1798,29 @@ function markdeepToHTML(str, elementMode) {
     // EMPTY LINKS: [](url)
     str = str.rp(/(^|[^!])\[[ \t]*?\]\(([^\)]+?)\)/g, function (match, pre, url) {
         return pre + '<a ' + protect('href="' + url + '"') + '>' + url + '</a>';
+    });
+
+    // IMAGE GRID: Rewrite rows and grids of images into a grid
+    var imageGridAttribs = protect('width="100%"');
+    var imageGridRowAttribs = protect('valign="top"');
+    str = str.rp(/(?:\n(?:[ \t]*!\[[^\n]*?\]\([^\)\s]+(?:[^\)]*?)?\)){2,}[ \t]*)+\n/g, function (match) {
+        var table = '';
+
+        // Break into rows:
+        match = match.split('\n');
+
+        // Parse each row:
+        match.forEach(function(row) {
+            row = row.trim();
+            if (row) {
+                // Parse each image
+                table += entag('tr', row.rp(/[ \t]*!\[[^\n]*?\]\([^\)\s]+(?:[^\)]*?)?\)/g, function(image) {
+                    return entag('td', '\n\n'+ image + '\n\n');
+                }), imageGridRowAttribs);
+            }
+        });
+
+        return '\n' + entag('table', table, imageGridAttribs) + '\n';
     });
 
     // SIMPLE IMAGE: ![](url attribs)
@@ -1817,17 +1848,17 @@ function markdeepToHTML(str, elementMode) {
             var divStyle = '';
 
             if (attribs) {
-                // Move any width attribute specification to the box itself
-                attribs = attribs.rp(/((?:max-)?width)\s*:\s*[^;'"]*/g, function (attribMatch, attrib) {
+                // Move any width *attribute* specification to the box itself
+                attribs = attribs.rp(/((?:max-)?(?:width|height))\s*:\s*[^;'"]*/g, function (attribMatch, attrib) {
                     divStyle = attribMatch + ';';
                     return attrib + ':100%';
                 });
 
-                // Move any width style specification to the box itself
-                attribs = attribs.rp(/((?:max-)?width)\s*=\s*('\S+?'|"\S+?")/g, function (attribMatch, attrib, expr) {
+                // Move any width *style* specification to the box itself
+                attribs = attribs.rp(/((?:max-)?(?:width|height))\s*=\s*('\S+?'|"\S+?")/g, function (attribMatch, attrib, expr) {
                     // Strip the quotes
                     divStyle = attrib + ':' + expr.ss(1, expr.length - 1) + ';';
-                    return 'style="width:100%" ';
+                    return 'style="' + attrib + ':100%" ';
                 });
             }
 
@@ -1877,9 +1908,9 @@ function markdeepToHTML(str, elementMode) {
     // (exclude things that look like table delimiters!)
     str = str.rp(/([^-!\:\|])---([^->\:\|])/g, '$1&mdash;$2');
 
-    // EN DASH: --
+    // other EM DASH: -- (we don't support en dash...it is too short and looks like a minus)
     // (exclude things that look like table delimiters!)
-    str = str.rp(/([^-!\:\|])--([^->\:\|])/g, '$1&ndash;$2');
+    str = str.rp(/([^-!\:\|])--([^->\:\|])/g, '$1&mdash;$2');
 
     // NUMBER x NUMBER:
     str = str.rp(/(\d+\s?)x(\s?\d+)/g, '$1&times;$2');
@@ -1923,10 +1954,9 @@ function markdeepToHTML(str, elementMode) {
     });
 
 
-    // End notes
-    str = str.rp(/\n\[\^(.*?)\]:((?:.+?\n?)*)/g, function (match, symbolicName, note) {
+    // FOOTNOTES/ENDNOTES
+    str = str.rp(/\n\[\^(\S+)\]: ((?:.+?\n?)*)/g, function (match, symbolicName, note) {
         symbolicName = symbolicName.toLowerCase().trim();
-
         if (symbolicName in endNoteTable) {
             return '\n<div ' + protect('class="endnote"') + '><a ' +
                 protect('name="endnote-' + symbolicName + '"') +

@@ -213,6 +213,16 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2016-09-10 Version 0.14: Robustness
+    1. Switched double minus signs to parse as em dash instead of en dash, since they visually resemble em dash in the text.
+    2. Corrected parsing of lists with spaces between the elements.
+    3. Grids of images are recognized and preserved.
+    4. Made table of contents work for documents with incorrect header nesting
+    5. Fixed an obscure browser-lockup bug resulting from parsing protected substrings as numbers for later markdown
+    6. Fixed protect accidentally generating sequences that look like dimensions.
+    7. Fixed links and images within footnotes and bibliography entries.
+    8. Increased character count for "short" definition lists to 160 characters.
+
   * 2016-08-01 Version 0.13: Book support
     1. Added support for youtu.be URL shortened videos
     2. Documented lang advanced option
