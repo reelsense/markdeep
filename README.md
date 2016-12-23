@@ -213,6 +213,15 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2016-12-20 Version 0.16: Printing support
+    1. Removed hyperlinking of svn and perforce URLs (they are still typset as URLs)
+    2. Improved Latex single-$ parsing
+    3. Fixed lists after unnumbered sections needing too much whitespace
+    4. Made horizontal rule parsing more permissive
+    5. Made layout avoid page breaks in tables, listings, and images when printed
+    6. Experimental `insert` support
+    7. Added version number to Markdeep footer
+
   * 2016-10-28 Version 0.15: Proof support
     1. Changed windows code font to Consolas because Lucida Console's capital 'V' character is confusingly small.
     2. Now only only floating images have constrained caption widths
