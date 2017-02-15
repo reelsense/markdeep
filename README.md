@@ -213,6 +213,16 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2017-02-12 Version 0.17: Style
+    1. Diagrams that are not floating may now omit the right-edge markers
+    2. Workarounds for Wordpress compatibility
+    3. Workaround for Firefox-specific bug with canvas in iframe affecting include statements
+    4. Allowed listing captions to be up to four lines long
+    5. Improved robustness of underscores and italics within words
+    6. Added Polish translation by Dariusz Kuśnierek
+    7. Added Latex and Dark style sheets.
+    8. Documented paragraph numbering
+
   * 2016-12-20 Version 0.16: Printing support
     1. Removed hyperlinking of svn and perforce URLs (they are still typset as URLs)
     2. Improved Latex single-$ parsing
