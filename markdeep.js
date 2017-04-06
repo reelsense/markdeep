@@ -1,8 +1,8 @@
 /**
   markdeep.js
-  Version 0.17
+  Version 0.18
 
-  Copyright 2015-2016, Morgan McGuire, http://casual-effects.com
+  Copyright 2015-2017, Morgan McGuire, http://casual-effects.com
   All rights reserved.
 
   -------------------------------------------------------------
@@ -28,7 +28,7 @@
   Sagalaev, which is used for code highlighting. (BSD 3-clause license)
 */
 /**See http://casual-effects.com/markdeep for @license and documentation.
-markdeep.min.js 0.17 (C) 2016 Morgan McGuire 
+markdeep.min.js 0.18 (C) 2017 Morgan McGuire 
 highlight.min.js 9.5.0 (C) 2016 Ivan Sagalaev https://highlightjs.org/*/
 (function() {
 'use strict';
@@ -362,7 +362,7 @@ var STYLESHEET = entag('style',
      
     '.md .shortTOC{text-align:center;font-weight:bold;margin-top:15px;font-size:14px}');
 
-var MARKDEEP_LINE = '<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>';
+var MARKDEEP_LINE = '<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>';
 
 // Language options:
 var FRENCH = {
@@ -855,7 +855,8 @@ function extractDiagram(sourceString) {
     function advance() {
         nextLineBeginning = sourceString.indexOf('\n', lineBeginning) + 1;
         textOnLeft  = textOnLeft  || /\S/.test(sourceString.ss(lineBeginning, lineBeginning + xMin));
-        textOnRight = textOnRight || /\S/.test(sourceString.ss(lineBeginning + xMax + 1, nextLineBeginning));
+        // Text on the right ... if the line is not all '*'
+        textOnRight = textOnRight || (/\S/.test(sourceString.ss(lineBeginning + xMax + 1, nextLineBeginning)) && ! /[^*]/.test(sourceString.ss(lineBeginning, nextLineBeginning)));
     }
 
     var noDiagramResult = {beforeString: sourceString, diagramString: '', alignmentHint: '', afterString: ''};
@@ -863,7 +864,7 @@ function extractDiagram(sourceString) {
     // Search sourceString for the first rectangle of enclosed
     // DIAGRAM_MARKER characters at least DIAGRAM_START.length wide
     for (var i = sourceString.indexOf(DIAGRAM_START);
-         i >= 0; 
+         i >= 0;
          i = sourceString.indexOf(DIAGRAM_START, i + DIAGRAM_START.length)) {
 
         // We found what looks like a diagram start. See if it has either a full border of
@@ -970,7 +971,6 @@ function replaceMatched(string, delimiterRegExp, tag, attribs) {
         '(' + flanking + '.*?(\\n.+?)*?)' + 
         delimiter + '(?![A-Za-z0-9])';
 
-    console.log(string);
     return string.rp(new RegExp(pattern, 'g'), 
                           '$1<' + tag + (attribs ? ' ' + attribs : '') +
                           '>$3</' + tag + '>');
@@ -1048,7 +1048,7 @@ function replaceTables(s, protect) {
 
 function replaceLists(s, protect) {
     // Identify list blocks:
-    // Blank line or line ending in colon, line that starts with 1.,*,+, or -,
+    // Blank line or line ending in colon, line that starts with #., *, +, or -,
     // and then any number of lines until another blank line
     var BLANK_LINES = /^\s*\n/.source;
     
@@ -1087,18 +1087,24 @@ function replaceLists(s, protect) {
                 
                 // Add a CSS class based on the type of list bullet
                 var attribs = ATTRIBS[trimmed[0]];
-                var isUnordered = !! attribs; // attribs !== undefined
+                var isUnordered = !! attribs; // JavaScript for: attribs !== undefined
                 attribs = attribs || NUMBER_ATTRIBS;
                 var isOrdered   = /^\d+\.[ \t]/.test(trimmed);
+                var isBlank     = trimmed === '';
 
-                // If not ordered or unordered, then we're just looking at a blank line
+                if (isOrdered || isUnordered) {
+                    // Add the indentation for the bullet itself
+                    indentLevel += 2;
+                }
+
                 if (! current) {
-                    // Went above top-level indent
+                    // Went below top-level indent
                     result += '\n' + line;
-                } else if (! isOrdered && ! isUnordered) {
-                    // Continued line
+                } else if (! isOrdered && ! isUnordered && (isBlank || (indentLevel >= current.indentLevel))) {
+                    // Line without a marker
                     result += '\n' + current.indentChars + line;
                 } else {
+                    //console.log(indentLevel + ":" + line);
                     if (indentLevel !== current.indentLevel) {
                         // Enter or leave indentation level
                         if ((current.indentLevel !== -1) && (indentLevel < current.indentLevel)) {
@@ -1112,7 +1118,8 @@ function replaceLists(s, protect) {
                             // Start a new list that is more indented
                             current = {indentLevel: indentLevel,
                                        tag:         isOrdered ? 'ol' : 'ul',
-                                       indentChars: line.ss(0, indentLevel)};
+                                       // Subtract off the two indent characters we added above
+                                       indentChars: line.ss(0, indentLevel - 2)};
                             stack.push(current);
                             result += '\n<' + current.tag + '>';
                         }
@@ -1419,7 +1426,7 @@ function replaceScheduleLists(str, protect) {
                    });
     } catch (ignore) {
         // Maybe this wasn't a schedule after all, since we couldn't parse a date
-        console.log(ignore);
+        console.log(ignore + ' in a Markdeep schedule list');
     }
 
     return str;
@@ -1775,8 +1782,8 @@ function markdeepToHTML(str, elementMode) {
     // processing so that their code is protected from further
     // Markdown processing
     var stylizeFence = function (cssClass, symbol) {
-        var pattern = new RegExp('\n' + symbol + '{3,}(.*)\n([\\s\\S]+?)\n' + symbol + '{3,}\n([ \t]*\\[.+(?:\n.+){0,3}\\])?', 'g');
-        str = str.rp(pattern, function(match, lang, sourceCode, caption) {
+        var pattern = new RegExp('\n([ \t]*)' + symbol + '{3,}(.*)\n([\\s\\S]+?)\n\\1' + symbol + '{3,}\n([ \t]*\\[.+(?:\n.+){0,3}\\])?', 'g');
+        str = str.rp(pattern, function(match, indent, lang, sourceCode, caption) {
             var result = '\n';
             if (caption) {
                 caption = caption.trim();
@@ -1784,6 +1791,10 @@ function markdeepToHTML(str, elementMode) {
             }
             lang = lang ? lang.trim() : lang;
             lang = lang ? [lang] : undefined;
+            
+            // Remove the block's own indentation from each line of sourceCode
+            sourceCode = sourceCode.rp(new RegExp('(^|\n)' + indent, 'g'), '$1');
+
             var highlighted = hljs.highlightAuto(sourceCode, lang);
             return result + protect(entag('pre', entag('code', highlighted.value), 'class="listing ' + cssClass + '"')) + '\n';
         });
@@ -1927,8 +1938,8 @@ function markdeepToHTML(str, elementMode) {
     });
 
     // CITATIONS: [#symbolicname]
-    // The reference:
-    str = str.rp(/\[#(\S+)\](?!:)/g, function (match, symbolicName) {
+    // The reference: (don't use \S+ because it can grab trailing punctuation)
+    str = str.rp(/\[#([^\)\(\[\]\.#\s]+)\](?!:)/g, function (match, symbolicName) {
         symbolicName = symbolicName.trim();
         return '[<a ' + protect('href="#citation-' + symbolicName.toLowerCase() + '"') + 
             '>' + symbolicName + '</a>]';
@@ -1973,8 +1984,10 @@ function markdeepToHTML(str, elementMode) {
             // Vimeo video
             img = '<iframe ' + protect('class="markdeep" src="https://player.vimeo.com/video/' + hash[1] + '"' + attribs + ' width="480px" height="300px" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen') + '></iframe>';
         } else {
-            // Image
-            img = '<img ' + protect('class="markdeep" src="' + url + '"' + attribs) + '/>';
+            // Image (trailing space is needed in case attribs must be quoted by the
+            // browser...without the space, the browser will put the closing slash in the
+            // quotes.)
+            img = '<img ' + protect('class="markdeep" src="' + url + '"' + attribs) + ' />';
 
             // Check for width or height (or max-width and max-height). If they exist,
             // link this to the full-size image as well.
@@ -1985,6 +1998,12 @@ function markdeepToHTML(str, elementMode) {
 
         return img;
     };
+
+    // Reformat figure links that have subfigure labels in parentheses, to avoid them being
+    // processed as links
+    str = str.rp(/\b(figure|fig\.|table|tbl\.|listing|lst\.)\s*\[([^\s\]]+)\](?=\()/gi, function (match) {
+        return match + '<span/>';
+    });
 
 
     // Process links before images so that captions can contain links
@@ -1998,21 +2017,21 @@ function markdeepToHTML(str, elementMode) {
         return "(http://g.gravizo.com/g?" + encodeURIComponent(url) + ")";
     });
 
-    // LINKS: [text](url attribs)
-    str = str.rp(/(^|[^!])\[([^\[\]]+?)\]\(([^\)]+?)(\s+[^\)]*?)?\)/g, function (match, pre, text, url, attribs) {
+    // HYPERLINKS: [text](url attribs)
+    str = str.rp(/(^|[^!])\[([^\[\]]+?)\]\(("?)([^<>\s"]+?)\3(\s+[^\)]*?)?\)/g, function (match, pre, text, maybeQuote, url, attribs) {
         attribs = attribs || '';
         return pre + '<a ' + protect('href="' + url + '"' + attribs) + '>' + text + '</a>' + maybeShowURL(url);
     });
 
-    // EMPTY LINKS: [](url)
-    str = str.rp(/(^|[^!])\[[ \t]*?\]\(([^\)]+?)\)/g, function (match, pre, url) {
+    // EMPTY HYPERLINKS: [](url)
+    str = str.rp(/(^|[^!])\[[ \t]*?\]\(("?)([^<>\s"]+?)\2\)/g, function (match, pre, maybeQuote, url) {
         return pre + '<a ' + protect('href="' + url + '"') + '>' + url + '</a>';
     });
 
     // IMAGE GRID: Rewrite rows and grids of images into a grid
     var imageGridAttribs = protect('width="100%"');
     var imageGridRowAttribs = protect('valign="top"');
-    str = str.rp(/(?:\n(?:[ \t]*!\[[^\n]*?\]\([^\)\s]+(?:[^\)]*?)?\)){2,}[ \t]*)+\n/g, function (match) {
+    str = str.rp(/(?:\n(?:[ \t]*!\[[^\n]*?\]\(("?)[^<>\s]+?(?:[^\)]*?)?\)){2,}[ \t]*)+\n/g, function (match) {
         var table = '';
 
         // Break into rows:
@@ -2033,7 +2052,7 @@ function markdeepToHTML(str, elementMode) {
     });
 
     // SIMPLE IMAGE: ![](url attribs)
-    str = str.rp(/(\s*)!\[\]\(([^\)\s]+)([^\)]*?)?\)(\s*)/g, function (match, preSpaces, url, attribs, postSpaces) {
+    str = str.rp(/(\s*)!\[\]\(("?)([^"<>\s]+?)\2(\s[^\)]*?)?\)(\s*)/g, function (match, preSpaces, maybeQuote, url, attribs, postSpaces) {
         var img = formatImage(match, url, attribs);
 
         if (isolated(preSpaces, postSpaces)) {
@@ -2044,7 +2063,6 @@ function markdeepToHTML(str, elementMode) {
         return preSpaces + img + postSpaces;
     });
 
-
     // Explicit loop so that the output will be re-processed, preserving spaces between blocks.
     // Note that there is intentionally no global flag on the first regexp since we only want
     // to process the first occurance.
@@ -2052,11 +2070,11 @@ function markdeepToHTML(str, elementMode) {
     while (loop) {
         loop = false;
         // CAPTIONED IMAGE: ![caption](url attribs)
-        str = str.rp(/(\s*)!\[([\s\S]+?)?\]\(([^\)\s]+)([^\)]*?)?\)(\s*)/, function (match, preSpaces, caption, url, attribs, postSpaces) {
+        str = str.rp(/(\s*)!\[([\s\S]+?)?\]\(("?)([^"<>\s]+?)\3(\s[^\)]*?)?\)(\s*)/, function (match, preSpaces, caption, maybeQuote, url, attribs, postSpaces) {
             loop = true;
             var divStyle = '';
             var iso = isolated(preSpaces, postSpaces);
-            
+
             // Only floating images get their size attributes moved to the whole box
             if (attribs && ! iso) {
                 // Move any width *attribute* specification to the box itself
@@ -2114,8 +2132,12 @@ function markdeepToHTML(str, elementMode) {
     str = str.rp(/([A-Za-z\.,:;\?!=<])(")(?=$|\W)/gm, '$1&rdquo;');
     
     // ARROWS:
-    str = str.rp(/(\s)==>(\s)/g, '$1&rarr;$2');
-    str = str.rp(/(\s)<==(\s)/g, '$1&larr;$2');
+    str = str.rp(/(\s|^)<==(\s)/g, '$1\u21D0$2');
+    str = str.rp(/(\s|^)->(\s)/g, '$1&rarr;$2');
+    str = str.rp(/(\s|^)==>(\s)/g, '$1\u21D2$2');
+    str = str.rp(/(\s|^)<-(\s)/g, '$1&larr;$2');
+    str = str.rp(/(\s|^)<==>(\s)/g, '$1\u21D4$2');
+    str = str.rp(/(\s|^)<->(\s)/g, '$1\u2194$2');
 
     // EM DASH: ---
     // (exclude things that look like table delimiters!)
@@ -2225,9 +2247,9 @@ function markdeepToHTML(str, elementMode) {
         return prefix + entag('a', '', protect('name="' + ref + '"')) + entag('b', type[0].toUpperCase() + type.ss(1) + '&nbsp;' + count + ':', protect('style="font-style:normal;"'));
     });
 
-
     // FIGURE, TABLE, and LISTING references:
-    str = str.rp(/\b(figure|fig\.|table|tbl\.|listing|lst.)\s+\[(.+?)\]/gi, function (match, _type, _ref) {
+    // (must come after figure/table/listing processing, obviously)
+    str = str.rp(/\b(figure|fig\.|table|tbl\.|listing|lst\.)\s+\[([^\s\]]+)\]/gi, function (match, _type, _ref) {
         // Fix abbreviations
         var type = _type.toLowerCase();
         switch (type) {
@@ -3724,7 +3746,7 @@ if (! window.alreadyProcessedMarkdeep) {
         document.body.style.visibility = 'visible';
     };
 
-    ///////////// 'insert' command processing
+    ///////////// INSERT  command processing
     // Helper function for use by children
     function sendContentsToMyParent() {
         //console.log(location.href + " sent message to parent");
@@ -3760,7 +3782,8 @@ if (! window.alreadyProcessedMarkdeep) {
                 });
                 
                 if (childID) {
-                    // This message was for the Markdeep/include.js system
+                    // This message event was for the Markdeep/include.js system
+
                     //console.log(location.href + ' received a message from child ' + childID);
                     
                     // Replace the corresponding node's contents

@@ -213,6 +213,18 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2017-03-31 Version 0.18: Lists and links
+    1. Improved detection of the end of lists followed by indented content
+    2. Improved handling of multiple lists within a single schedule list day
+    3. Removed console debug output that was accidentally enabled in version 0.17
+    4. Defaulted to including the markdeep.min.js script with a trailing ?, to force updates under new aggressive browser caching
+    5. Support for subfigures in references, e.g., Figure [dinosaur](a)
+    6. Support for quoted URLs (needed for URLs containing unescaped parentheses)
+    7. Allowed fenced code blocks to be indented
+    8. Added support for both single and double arrows
+    9. Fixed incorrect floating on diagrams that lack a right border
+    10. Fixed citations at the end of figure captions
+
   * 2017-02-12 Version 0.17: Style
     1. Diagrams that are not floating may now omit the right-edge markers
     2. Workarounds for Wordpress compatibility
