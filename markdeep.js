@@ -1,6 +1,6 @@
 /**
   markdeep.js
-  Version 0.18
+  Version 0.19
 
   Copyright 2015-2017, Morgan McGuire, http://casual-effects.com
   All rights reserved.
@@ -28,12 +28,12 @@
   Sagalaev, which is used for code highlighting. (BSD 3-clause license)
 */
 /**See http://casual-effects.com/markdeep for @license and documentation.
-markdeep.min.js 0.18 (C) 2017 Morgan McGuire 
+markdeep.min.js 0.19 (C) 2017 Morgan McGuire 
 highlight.min.js 9.5.0 (C) 2016 Ivan Sagalaev https://highlightjs.org/*/
 (function() {
 'use strict';
 
-var MARKDEEP_FOOTER = '<div class="markdeepFooter"><i>formatted by <a href="http://casual-effects.com/markdeep" style="color:#999">Markdeep&nbsp;0.16&nbsp;&nbsp;</a></i><div style="display:inline-block;font-size:13px;font-family:\'Times New Roman\',serif;vertical-align:middle;transform:translate(-3px,-1px)rotate(135deg);">&#x2712;</div></div>';
+var MARKDEEP_FOOTER = '<div class="markdeepFooter"><i>formatted by <a href="http://casual-effects.com/markdeep" style="color:#999">Markdeep&nbsp;0.19&nbsp;&nbsp;</a></i><div style="display:inline-block;font-size:13px;font-family:\'Times New Roman\',serif;vertical-align:middle;transform:translate(-3px,-1px)rotate(135deg);">&#x2712;</div></div>';
 
 
 // For minification. This is admittedly scary.
@@ -205,6 +205,10 @@ var STYLESHEET = entag('style',
     'clear:both' +
     '}' +
 
+    'h1,h2,h3,h4,h5,h6,.nonumberh1,.nonumberh2,.nonumberh3,.nonumberh4,.nonumberh5,.nonumberh6{' +
+     'page-break-after:avoid;break-after:avoid' +
+    '}'+
+
     '.md svg.diagram{' +
     'display:block;' +
     'font-family:' + codeFontStack + ';' +
@@ -225,6 +229,9 @@ var STYLESHEET = entag('style',
     'stroke:none' +
     '}' +
 
+    // pagebreak hr
+    '@media print{.md .pagebreak{page-break-after:always; visibility:hidden}}' +
+
     // Not restricted to a:link because we want things like svn URLs to have this font, which
     // makes "//" look better.
     '.md a{font-family:Georgia,Palatino,\'Times New Roman\'}' +
@@ -243,6 +250,7 @@ var STYLESHEET = entag('style',
     'counter-reset: h3 h4 h5 h6;' +
     'border-bottom:2px solid #999;' +
     'color:#555;' +
+    'font-weight:bold;'+
     'font-size:18px;' +
     '}' +
 
@@ -670,7 +678,7 @@ var DEFAULT_OPTIONS = {
     lang:               {keyword:{}}, // English
     tocStyle:           'auto',
     hideEmptyWeekends:  true,
-    showURLs:           false,
+    showLabels:           false,
     sortScheduleLists:  true
 };
 
@@ -719,8 +727,8 @@ function option(key) {
 }
 
 
-function maybeShowURL(url, tag) {
-    if (option('showURLs')) {
+function maybeShowLabel(url, tag) {
+    if (option('showLabels')) {
         var text = ' {\u00A0' + url + '\u00A0}';
         return tag ? entag(tag, text) : text;
     } else {
@@ -855,8 +863,8 @@ function extractDiagram(sourceString) {
     function advance() {
         nextLineBeginning = sourceString.indexOf('\n', lineBeginning) + 1;
         textOnLeft  = textOnLeft  || /\S/.test(sourceString.ss(lineBeginning, lineBeginning + xMin));
-        // Text on the right ... if the line is not all '*'
-        textOnRight = textOnRight || (/\S/.test(sourceString.ss(lineBeginning + xMax + 1, nextLineBeginning)) && ! /[^*]/.test(sourceString.ss(lineBeginning, nextLineBeginning)));
+        // Text on the right ... if the line is not all '*'        
+        textOnRight = textOnRight || /[^ *\t\n\r]/.test(sourceString.ss(lineBeginning + xMax + 1, nextLineBeginning));
     }
 
     var noDiagramResult = {beforeString: sourceString, diagramString: '', alignmentHint: '', afterString: ''};
@@ -978,8 +986,8 @@ function replaceMatched(string, delimiterRegExp, tag, attribs) {
     
 /** Maruku ("github")-style table processing */
 function replaceTables(s, protect) {
-    var TABLE_ROW       = /(?:\n\|?[ \t\S]+?(?:\|[ \t\S]+?)+\|?(?=\n))/.source;
-    var TABLE_SEPARATOR = /\n\|? *\:?-+\:?(?: *\| *\:?-+\:?)+ *\|?(?=\n)/.source;
+    var TABLE_ROW       = /(?:\n[ \t]*(?:(?:\|?[ \t\S]+?(?:\|[ \t\S]+?)+\|?)|\|[ \t\S]+\|)(?=\n))/.source;
+    var TABLE_SEPARATOR = /\n[ \t]*(?:(?:\|? *\:?-+\:?(?: *\| *\:?-+\:?)+ *\|?|)|\|[\:-]+\|)(?=\n)/.source;
     var TABLE_CAPTION   = /\n[ \t]*\[[^\n\|]+\][ \t]*(?=\n)/.source;
     var TABLE_REGEXP    = new RegExp(TABLE_ROW + TABLE_SEPARATOR + TABLE_ROW + '+(' + TABLE_CAPTION + ')?', 'g');
 
@@ -1013,12 +1021,25 @@ function replaceTables(s, protect) {
             var right = (match[match.length - 1] === ':');
             columnStyle.push(protect(' style="text-align:' + ((left && right) ? 'center' : (right ? 'right' : 'left')) + '"'));
         });
+
+        var row = rowArray[startRow + 1].trim();
+        var hasLeadingBar  = row[0] === '|';
+        var hasTrailingBar = row[row.length - 1] === '|';
         
         var tag = 'th';
+        
         for (var r = startRow; r < rowArray.length; ++r) {
             // Remove leading and trailing whitespace and column delimiters
-            var row = trimTableRowEnds(rowArray[r].trim());
-            
+            row = rowArray[r].trim();
+            if (! hasLeadingBar && (row[0] === '|')) {
+                // Empty first column
+                row = '&nbsp;' + row;
+            }
+            if (! hasTrailingBar && (row[row.length - 1] === '|')) {
+                // Empty last column
+                row += '&nbsp;';
+            }
+            row = trimTableRowEnds(row);
             var i = 0;
             result += entag('tr', '<' + tag + columnStyle[0] + '>' + 
                             row.rp(/\|/g, function () {
@@ -1140,12 +1161,15 @@ function replaceLists(s, protect) {
                 }
             }); // For each line
 
+            // Remove trailing whitespace
+            result = result.replace(/\s+$/,'');
+            
             // Finish the last item and anything else on the stack (if needed)
             for (current = stack.pop(); current; current = stack.pop()) {
-                result += '</li></' + current.tag + '>\n';
+                result += '</li></' + current.tag + '>';
             }
        
-            return result;
+            return result + '\n\n';
         });
     } // while keep going
 
@@ -1632,7 +1656,7 @@ function insertTableOfContents(s, protect) {
 
     case 'long':
         insertLocation = firstHeaderLocation;
-        TOC = '<div class="longTOC"><div class="tocHeader">Contents</div><p>' + fullTOC + '</p></div>';
+        TOC = '<div class="longTOC"><div class="tocHeader">' + keyword('contents') + '</div><p>' + fullTOC + '</p></div>';
         break;
 
     default:
@@ -1760,7 +1784,6 @@ function markdeepToHTML(str, elementMode) {
         var result = extractDiagram(str);
         if (result.diagramString) {
             var CAPTION_REGEXP = /^\n*[ \t]*\[[^\n]+\][ \t]*(?=\n)/;
-            //console.log(result.afterString.match(CAPTION_REGEXP));
             result.afterString = result.afterString.rp(CAPTION_REGEXP, function (caption) {
                 // Strip whitespace and enclosing brackets from the caption
                 caption = caption.trim();
@@ -1768,7 +1791,7 @@ function markdeepToHTML(str, elementMode) {
                 
                 return entag('center', entag('div', caption, protect('class="imagecaption"')));
             });
-            
+
             var diagramSVG = diagramToSVG(result.diagramString, result.alignmentHint);
             return result.beforeString +
                 diagramSVG + '\n' +
@@ -1898,12 +1921,15 @@ function markdeepToHTML(str, elementMode) {
 
     // HORIZONTAL RULE: * * *, - - -, _ _ _
     str = str.rp(/\n[ \t]*((\*|-|_)[ \t]*){3,}[ \t]*\n/g, '\n<hr/>\n');
-    var FANCY_QUOTE = protect('class="fancyquote"');
+
+    // PAGE BREAK or HORIZONTAL RULE: +++++
+    str = str.rp(/\n[ \t]*\+{5,}[ \t]*\n/g, '\n<hr ' + protect('class="pagebreak"') + '/>\n');
 
     // FANCY QUOTE in a blockquote:
     // > " .... "
     // >    -- Foo
 
+    var FANCY_QUOTE = protect('class="fancyquote"');
     str = str.rp(/\n>[ \t]*"(.*(?:\n>.*)*)"[ \t]*(?:\n>[ \t]*)?(\n>[ \t]{2,}\S.*)?\n/g,
                  function (match, quote, author) {
                      return entag('blockquote', 
@@ -2020,7 +2046,7 @@ function markdeepToHTML(str, elementMode) {
     // HYPERLINKS: [text](url attribs)
     str = str.rp(/(^|[^!])\[([^\[\]]+?)\]\(("?)([^<>\s"]+?)\3(\s+[^\)]*?)?\)/g, function (match, pre, text, maybeQuote, url, attribs) {
         attribs = attribs || '';
-        return pre + '<a ' + protect('href="' + url + '"' + attribs) + '>' + text + '</a>' + maybeShowURL(url);
+        return pre + '<a ' + protect('href="' + url + '"' + attribs) + '>' + text + '</a>' + maybeShowLabel(url);
     });
 
     // EMPTY HYPERLINKS: [](url)
@@ -2104,7 +2130,7 @@ function markdeepToHTML(str, elementMode) {
             
             return preSpaces + 
                 entag('div', img + entag('div', 
-                                         caption + maybeShowURL(url),
+                                         caption + maybeShowLabel(url),
                                          protect('class="imagecaption"')),
                       protect('class="image" style="' + divStyle + '"')) + 
                 postSpaces;
@@ -2157,6 +2183,9 @@ function markdeepToHTML(str, elementMode) {
     // EXPONENTS: ^1 ^-1 (no decimal places allowed)
     str = str.rp(/\^([-+]?\d+)\b/g, '<sup>$1</sup>');
 
+    // PAGE BREAK:
+    str = str.rp(/\b\\(pagebreak|newpage)\b/gi, protect('<div style="page-break-after:always"> </div>\n'))
+    
     // SCHEDULE LISTS: date : title followed by indented content
     str = replaceScheduleLists(str, protect);
 
@@ -2244,7 +2273,9 @@ function markdeepToHTML(str, elementMode) {
         // Store the reference number
         refTable[ref] = {number: count, used: false, source: type + ' [' + _ref + ']'};
         
-        return prefix + entag('a', '', protect('name="' + ref + '"')) + entag('b', type[0].toUpperCase() + type.ss(1) + '&nbsp;' + count + ':', protect('style="font-style:normal;"'));
+        return prefix +
+               entag('a', '', protect('name="' + ref + '"')) + entag('b', type[0].toUpperCase() + type.ss(1) + '&nbsp;' + count + ':', protect('style="font-style:normal;"')) +
+               maybeShowLabel(_ref);
     });
 
     // FIGURE, TABLE, and LISTING references:
@@ -2264,7 +2295,7 @@ function markdeepToHTML(str, elementMode) {
 
         if (t) {
             t.used = true;
-            return '<a ' + protect('href="#' + ref + '"') + '>' + _type + '&nbsp;' + t.number + '</a>';
+            return '<a ' + protect('href="#' + ref + '"') + '>' + _type + '&nbsp;' + t.number + maybeShowLabel(_ref) + '</a>';
         } else {
             console.log("Reference to undefined '" + type + " [" + _ref + "]'");
             return _type + ' ?';
@@ -2297,7 +2328,7 @@ function markdeepToHTML(str, elementMode) {
                 subtitles = subtitles ? subtitles.rp(/[ \t]*(\S.*?)\n/g, '<div class="subtitle"> $1 </div>\n') : '';
                 
                 // Remove all tags from the title when inside the <TITLE> tag
-                return entag('title', removeHTMLTags(title)) + maybeShowURL(window.location.href, 'center') +
+                return entag('title', removeHTMLTags(title)) + maybeShowLabel(window.location.href, 'center') +
                     '<div class="title"> ' + title + 
                     ' </div>\n' + subtitles + '<div class="afterTitles"></div>\n';
             });
@@ -2306,7 +2337,10 @@ function markdeepToHTML(str, elementMode) {
     // Remove any bogus leading close-paragraph tag inserted by our extra newlines
     str = str.rp(/^\s*<\/p>/, '');
 
-    if (! elementMode) {
+    // If not in element mode and not an INSERT child, maybe add a TOC
+    //TODO: Use myURLParse here...why doesn't it work??
+    //console.log(location.href);///([^?]+)(?:\?id=(inc\d+)&p=([^&]+))?/.exec(location.href)[2]);
+    if (! elementMode) {// && ! myURLParse[2]) {
         var temp = insertTableOfContents(str, protect);
         str = temp[0];
         var toc = temp[1];
@@ -2346,14 +2380,15 @@ function markdeepToHTML(str, elementMode) {
 
 
 /**
-   Adds whitespace at the end of each line of str, so that all lines
-   have equal length
+   Adds whitespace at the end of each line of str, so that all lines have equal length in
+   unicode characters (which is not the same as JavaScript characters when high-index/escape
+   characters are present).
 */
 function equalizeLineLengths(str) {
     var lineArray = str.split('\n');
     var longest = 0;
     lineArray.forEach(function(line) {
-        longest = max(longest, line.length);
+        longest = max(longest, Array.from(line).length);
     });
 
     // Worst case spaces needed for equalizing lengths
@@ -2364,7 +2399,7 @@ function equalizeLineLengths(str) {
     lineArray.forEach(function(line) {
         // Append the needed number of spaces onto each line, and
         // reconstruct the output with newlines
-        result += line + spaces.ss(line.length) + '\n';
+        result += line + spaces.ss(Array.from(line).length) + '\n';
     });
 
     return result;
@@ -2406,8 +2441,8 @@ function isASCIILetter(c) {
     return ((code >= 65) && (code <= 90)) || ((code >= 97) && (code <= 122));
 }
 
-/** Converts diagramString, which is a Markdeep diagram without the
-    surrounding asterisks, to SVG (HTML). 
+/** Converts diagramString, which is a Markdeep diagram without the surrounding asterisks, to
+    SVG (HTML). Lines may have ragged lengths.
 
     alignmentHint is the float alignment desired for the SVG tag,
     which can be 'floatleft', 'floatright', or ''
@@ -2421,7 +2456,9 @@ function diagramToSVG(diagramString, alignmentHint) {
     // decoration. This will be replaced in the final svg and is
     // faster than checking each neighborhood each time.
     var HIDE_O = '\ue004';
-    diagramString = diagramString.rp(/([a-z]|[A-Z])o([a-z]|[A-Z])/g, '$1' + HIDE_O + '$2');
+    diagramString = diagramString.rp(/([a-zA-Z]{2})o/g, '$1' + HIDE_O);
+    diagramString = diagramString.rp(/o([a-zA-Z]{2})/g, HIDE_O + '$1');
+    diagramString = diagramString.rp(/([a-zA-Z\ue004])o([a-zA-Z\ue004])/g, '$1' + HIDE_O + '$2');
 
     /** Pixels per character */
     var SCALE   = 8;
@@ -2496,11 +2533,9 @@ function diagramToSVG(diagramString, alignmentHint) {
     Vec2.prototype.toString = Vec2.prototype.toSVG = 
         function () { return '' + (this.x * SCALE) + ',' + (this.y * SCALE * ASPECT) + ' '; };
 
-    /** The grid is */
+    /** Converts a "rectangular" string defined by newlines into 2D
+        array of characters. Grids are immutable. */
     function makeGrid(str) {
-        /** Converts a "rectangular" string defined by newlines into 2D
-            array of characters. Grids are immutable. */
-
         /** Returns ' ' for out of bounds values */
         var grid = function(x, y) {
             if (y === undefined) {
@@ -2515,9 +2550,14 @@ function diagramToSVG(diagramString, alignmentHint) {
         // Elements are true when consumed
         grid._used   = [];
 
-        grid.width   = str.indexOf('\n');
         grid.height  = str.split('\n').length;
         if (str[str.length - 1] === '\n') { --grid.height; }
+
+        // Convert the string to an array to better handle greater-than 16-bit unicode
+        // characters, which JavaScript does not process correctly with indices. Do this after
+        // the above string processing.
+        str = Array.from(str);
+        grid.width = str.indexOf('\n');
 
         /** Mark this location. Takes a Vec2 or (x, y) */
         grid.setUsed = function (x, y) {
@@ -2849,7 +2889,7 @@ function diagramToSVG(diagramString, alignmentHint) {
             for (var i = 0; i < this._pathArray.length; ++i) {
                 if (method.call(this._pathArray[i], x, y)) { return true; }
             }
-            return false;
+            // Fall through: return undefined == false
         }
     }
 
@@ -2929,7 +2969,7 @@ function diagramToSVG(diagramString, alignmentHint) {
             } else if (isGray(decoration.type)) {
                 
                 var shade = Math.round((3 - GRAY_CHARACTERS.indexOf(decoration.type)) * 63.75);
-                svg += '<rect x="' + ((C.x - 0.5) * SCALE) + '" y="' + ((C.y - 0.5) * SCALE * ASPECT) + '" width="' + SCALE + '" height="' + (SCALE * ASPECT) + '" fill="rgb(' + shade + ',' + shade + ',' + shade +')"/>';
+                svg += '<rect x="' + ((C.x - 0.5) * SCALE) + '" y="' + ((C.y - 0.5) * SCALE * ASPECT) + '" width="' + SCALE + '" height="' + (SCALE * ASPECT) + '" stroke=none fill="rgb(' + shade + ',' + shade + ',' + shade +')"/>';
 
             } else if (isTri(decoration.type)) {
                 // 30-60-90 triangle
@@ -3340,6 +3380,7 @@ function diagramToSVG(diagramString, alignmentHint) {
 
     function findDecorations(grid, pathSet, decorationSet) {
         function isEmptyOrVertex(c) { return (c === ' ') || /[^a-zA-Z0-9]|[ov]/.test(c); }
+        function isLetter(c) { var x = c.toUpperCase().charCodeAt(0); return (x > 64) && (x < 91); }
                     
         /** Is the point in the center of these values on a line? Allow points that are vertically
             adjacent but not horizontally--they wouldn't fit anyway, and might be text. */
@@ -3369,6 +3410,8 @@ function diagramToSVG(diagramString, alignmentHint) {
                     var dn = grid(x, y + 1);
                     var lt = grid(x - 1, y);
                     var rt = grid(x + 1, y);
+                    var llt = grid(x - 2, y);
+                    var rrt = grid(x + 2, y);
 
                     if (pathSet.rightEndsAt(x - 1, y) ||   // Must be at the end of a line...
                         pathSet.leftEndsAt(x + 1, y) ||    // or completely isolated NSEW
@@ -3377,9 +3420,9 @@ function diagramToSVG(diagramString, alignmentHint) {
 
                         pathSet.upEndsAt(x, y) ||    // For points on vertical lines 
                         pathSet.downEndsAt(x, y) ||  // that are surrounded by other characters
-
-                        onLine(up, dn, lt, rt)) {
                         
+                        onLine(up, dn, lt, rt)) {
+
                         decorationSet.insert(x, y, c);
                         grid.setUsed(x, y);
                     }
@@ -3481,7 +3524,6 @@ function diagramToSVG(diagramString, alignmentHint) {
         } // x
     } // findArrowHeads
 
-    //var grid = new Grid(diagramString);
     var grid = makeGrid(diagramString);
 
     var pathSet = new PathSet();
@@ -3611,7 +3653,7 @@ if (! window.alreadyProcessedMarkdeep) {
             return STYLESHEET + sectionNumberingStylesheet() + HIGHLIGHT_STYLESHEET;
         }
     });
-
+ 
     var mode = option('mode');
     switch (mode) {
     case 'script':
@@ -3707,7 +3749,7 @@ if (! window.alreadyProcessedMarkdeep) {
         
         if (needMathJax) {
             // Custom definitions (NC == \newcommand)
-            var MATHJAX_COMMANDS = '$$NC{\\n}{\\hat{n}}NC{\\w}{\\hat{\\omega}}NC{\\wi}{\\w_\\mathrm{i}}NC{\\wo}{\\w_\\mathrm{o}}NC{\\wh}{\\w_\\mathrm{h}}NC{\\Li}{L_\\mathrm{i}}NC{\\Lo}{L_\\mathrm{o}}NC{\\Le}{L_\\mathrm{e}}NC{\\Lr}{L_\\mathrm{r}}NC{\\Lt}{L_\\mathrm{t}}NC{\\O}{\\mathrm{O}}NC{\\degrees}{{^\\circ}}NC{\\T}{\\mathsf{T}}NC{\\mathset}[1]{\\mathbb{#1}}NC{\\Real}{\\mathset{R}}NC{\\Integer}{\\mathset{Z}}NC{\\Boolean}{\\mathset{B}}NC{\\Complex}{\\mathset{C}}$$\n'.rp(/NC/g, '\\newcommand');
+            var MATHJAX_COMMANDS = '$$NC{\\n}{\\hat{n}}NC{\\w}{\\hat{\\omega}}NC{\\wi}{\\w_\\mathrm{i}}NC{\\wo}{\\w_\\mathrm{o}}NC{\\wh}{\\w_\\mathrm{h}}NC{\\Li}{L_\\mathrm{i}}NC{\\Lo}{L_\\mathrm{o}}NC{\\Le}{L_\\mathrm{e}}NC{\\Lr}{L_\\mathrm{r}}NC{\\Lt}{L_\\mathrm{t}}NC{\\O}{\\mathrm{O}}NC{\\degrees}{{^{\\large\\circ}}}NC{\\T}{\\mathsf{T}}NC{\\mathset}[1]{\\mathbb{#1}}NC{\\Real}{\\mathset{R}}NC{\\Integer}{\\mathset{Z}}NC{\\Boolean}{\\mathset{B}}NC{\\Complex}{\\mathset{C}}NC{\\un}[1]{\\,\\mathrm{#1}}$$\n'.rp(/NC/g, '\\newcommand');
 
             markdeepHTML = '<script type="text/x-mathjax-config">MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });</script>' +
                 '<span style="display:none">' + MATHJAX_COMMANDS + '</span>\n' + markdeepHTML; 
@@ -3728,7 +3770,7 @@ if (! window.alreadyProcessedMarkdeep) {
             var text = '<meta charset="UTF-8"><meta http-equiv="content-type" content="text/html;charset=UTF-8">' + head + document.head.innerHTML + markdeepHTML;
             if (needMathJax) {
                 // Dynamically load mathjax
-                text += '<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
+                text += '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
             }
             document.body.innerHTML = entag('code', escapeHTMLEntities(text));
         } else {
@@ -3746,67 +3788,76 @@ if (! window.alreadyProcessedMarkdeep) {
         document.body.style.visibility = 'visible';
     };
 
-    ///////////// INSERT  command processing
+    ///////////// INSERT command processing
     // Helper function for use by children
     function sendContentsToMyParent() {
-        //console.log(location.href + " sent message to parent");
-        parent.postMessage(myID + '=' + source, '*');
+        // console.log(location.pathname + " sent message to parent");
+        // Send the document contents after the childFrame replaced itself
+        // (not the source variable captured when this function was defined!)
+        parent.postMessage(myID + '=' + document.body.innerHTML, '*');
     }
 
     // Strip the filename from the url, if there is one (and it is a string)
     function removeFilename(url) {
         return url && url.ss(0, url.lastIndexOf('/') + 1);
     }
-    
-    var tmp = /([^?]+)(?:\?id=(inc\d+)&p=([^&]+))?/.exec(location.href);
-    var myBase = removeFilename(tmp[1]);
-    var myID = tmp[2];
-    var parentBase = removeFilename(tmp[3] && decodeURIComponent(tmp[3]));
+
+    var myURLParse = /([^?]+)(?:\?id=(inc\d+)&p=([^&]+))?/.exec(location.href);
+
+    var myBase = removeFilename(myURLParse[1]);
+    var myID = myURLParse[2];
+    var parentBase = removeFilename(myURLParse[3] && decodeURIComponent(myURLParse[3]));
     var childFrameStyle = 'display:none';
     var includeCounter = 0;
     var IAmAChild = myID; // !== undefined
     var IAmAParent = false;
     var numIncludeChildrenLeft = 0;
-    
+
+    var messageCallback = function (event) {
+        // Parse the message. Ensure that it is for the Markdeep/include.js system.
+        var childID = false;
+        var childBody = event.data.replace(/^(inc\d+)=/, function (match, a) {
+            childID = a;
+            return '';
+        });
+        
+        if (childID) {
+            // This message event was for the Markdeep/include.js system
+            
+            //console.log(location.href + ' received a message from child ' + childID);
+            
+            // Replace the corresponding node's contents
+            var childFrame = document.getElementById(childID);
+            childFrame.outerHTML = '\n' + childBody + '\n';
+            
+            --numIncludeChildrenLeft;
+
+            // console.log(window.location.pathname, 'numIncludeChildrenLeft = ' + numIncludeChildrenLeft);
+            
+            if (numIncludeChildrenLeft <= 0) {
+                if (IAmAChild) {
+                    //console.log("Intermediate node " + location.pathname + " sending to parent");
+                    sendContentsToMyParent();
+                } else {
+                    // The entire document is complete, so run the markdeep processor
+                    // as soon as the document has recovered from our replacements
+                    setTimeout(markdeepProcessor, 0);
+                }
+            }
+        }
+    };
+
     source = source.rp(/(?:^|\s)\(insert[ \t]+(\S+\.\S*)[ \t]+here\)\s/g, function(match, src) {
         if (numIncludeChildrenLeft === 0) {
             // This is the first child observed. Prepare to receive messages from the
             // embedded children.
             IAmAParent = true;
-            addEventListener("message", function (event) {
-                // Parse the message. Ensure that it is for the Markdeep/include.js system.
-                var childID = false;
-                var childBody = event.data.replace(/^(inc\d+)=/, function (match, a) {
-                    childID = a;
-                    return '';
-                });
-                
-                if (childID) {
-                    // This message event was for the Markdeep/include.js system
-
-                    //console.log(location.href + ' received a message from child ' + childID);
-                    
-                    // Replace the corresponding node's contents
-                    var childFrame = document.getElementById(childID);
-                    childFrame.outerHTML = childBody + '\n';
-                    
-                    --numIncludeChildrenLeft;
-
-                    if (numIncludeChildrenLeft <= 0) {
-                        if (IAmAChild) {
-                            sendContentsToMyParent();
-                        } else {
-                            // The entire document is complete, so run the markdeep processor
-                            // as soon as the document has recovered from our replacements
-                            setTimeout(markdeepProcessor, 0);
-                        }
-                    }
-                }
-            });
+            addEventListener("message", messageCallback);
         }
 
         ++numIncludeChildrenLeft;
-
+        // console.log(window.location.pathname, 'numIncludeChildrenLeft = ' + numIncludeChildrenLeft);
+        
         // Replace this tag with a frame that loads the document.  Once loaded, it will
         // send a message with its contents for use as a replacement.
         var childID = 'inc' + (++includeCounter);
@@ -3814,16 +3865,20 @@ if (! window.alreadyProcessedMarkdeep) {
             '"id="' + childID + '"style="' + childFrameStyle + '" content="text/html;charset=UTF-8"></iframe>';
     });
 
+    // console.log("after insert: "+ source);
+
     if (IAmAParent) {
+        // I'm waiting on children, so don't run the full processor yet,
+        // but do substitute the iframe code so that it can launch.
         document.body.innerHTML = source;
+    } else if (IAmAChild) {
+        // I'm a child and not a parent, so trigger the send now
+        // console.log("Leaf node " + location.pathname + " sending to parent");
+        sendContentsToMyParent();
     } else {
-        if (IAmAChild) {
-            // I'm not waiting on my own children, so trigger the send now
-            sendContentsToMyParent();
-        } else {
-            // Run markdeep processing after the rest of this file parses
-            setTimeout(markdeepProcessor, 0);
-        }
+        // No includes. Run markdeep processing after the rest of this file parses
+        // console.log("non-parent, non-child Parent scheduling markdeepProcessor");
+        setTimeout(markdeepProcessor, 0);
     }
 }
 

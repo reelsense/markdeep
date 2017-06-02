@@ -213,6 +213,24 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2017-05-27 Version 0.19: Layout
+    1. Adjusted the generation of paragraph tags around lists to better support HTML post-processing.
+    2. Fixed recursive (insert X here) statements triggering multiple tables of contents.
+    3. Renamed showURLs to showLabels and made it display both labels and URLs.
+    4. Added localization for the Contents text in the table of contents.
+    5. Switched to cloudflare CDN for Mathjax.
+    6. Fixed table layout in the presence of an empty first or last column cell.
+    7. Added `\un` Latex macro for units in math.
+    8. Added slide template (thanks to Torsten Grust).
+    9. Allowed leading space before tables with outside borders.
+    10. Added support for single-column tables.
+    11. Avoided page breaks after headers.
+    12. Improved rendering of high-index Unicode characters in diagrams.
+    13. Fixed font-weight of unnumbered H2 sections.
+    14. Removed stroke borders from grayscale Unicode blocks in diagrams.
+    15. Support for `\pagebreak`, `\newpage`, and page breaks with `++++++++`.
+    16. Made the `dark.css` style sheet print with a white background.
+
   * 2017-03-31 Version 0.18: Lists and links
     1. Improved detection of the end of lists followed by indented content
     2. Improved handling of multiple lists within a single schedule list day
