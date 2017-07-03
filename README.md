@@ -213,6 +213,15 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2017-06-30 Version 0.20: Customization
+    1. Updated Mathjax for files included via (insert) to use cloudflare.
+    2. Fixed events from other JavaScript libraries interfering with Markdeep.
+    3. Updated `wkhtmltopdf` instructions to work around bugs in their 0.12.4 version.
+    4. Avoided generating empty <a> tags to work around a longstanding `wkhtmltopdf` bug.
+    5. Improved colors for tables in the dark template.
+    6. Added Swedish localization by Nils Nilsson.
+    7. Added captionAbove option for figures, listings, and tables.
+
   * 2017-05-27 Version 0.19: Layout
     1. Adjusted the generation of paragraph tags around lists to better support HTML post-processing.
     2. Fixed recursive (insert X here) statements triggering multiple tables of contents.
