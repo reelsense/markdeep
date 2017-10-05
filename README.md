@@ -87,17 +87,17 @@ You can drag your document into a web browser or double click on it to see it wi
 View the plain source of the feature demo to learn the formatting styles that you can use. Markdeep extends Markdown, and to quote John Gruber:
 
 The overriding design goal for Markdown's formatting syntax is to make it as readable as possible. The idea is that a Markdown-formatted document should be publishable as-is, as plain text, without looking like it's been marked up with tags or formatting instructions.
-To inspect the original text source for a Markdeep document in a browser, just add ```?noformat``` to the end of its URL.
+To inspect the original text source for a Markdeep document in a browser, just add `?noformat` to the end of its URL.
 
 # Origin and Credits
 
-I created Markdeep because I was no longer willing to choose between design documents that looked good and those that worked well with programming tools. I liked what Mark_**down**_ did on web servers, so I used that as a starting point and added more styling features and a way to directly view the documents client side in a browser.
+I created Markdeep because I was no longer willing to choose between design documents that looked good and those that worked well with programming tools. I liked what _**Markdown**_ did on web servers, so I used that as a starting point and added more styling features and a way to directly view the documents client side in a browser.
 
-HTML is "mark_**up**_" that extends plain text with formatting. Unfortunately, the formatting tags often make original document source hard to read and write. This is slow and annoying, especially for those of us who use programming tools for document editing or want formatting in documentation files.
+HTML is "_**markup**_" that extends plain text with formatting. Unfortunately, the formatting tags often make original document source hard to read and write. This is slow and annoying, especially for those of us who use programming tools for document editing or want formatting in documentation files.
 
 John Gruber invented [Markdown](https://daringfireball.net/projects/markdown/) to address HTML's editing problems. The name "mark**_down_**" conveys styling in the opposite direction of the "mark**_up_**" tag syntax. Markdown beautifies text without explicit tags, based on common practices from ASCII e-mail and plain-text documents
 
-"Mark_**deep**_" is farther "down" from "mark_**down**_" on the autostyling and beautification path. Markdeep combines an easy-to-use and browser-friendly packaging with new unique features for diagrams. The code includes some of the best previous Javascript document formatting libraries and links to [MathJax](https://www.mathjax.org/) for equation typesetting
+"_**Markdeep**_" is farther "down" from "_**markdown**_" on the autostyling and beautification path. Markdeep combines an easy-to-use and browser-friendly packaging with new unique features for diagrams. The code includes some of the best previous Javascript document formatting libraries and links to [MathJax](https://www.mathjax.org/) for equation typesetting
 
 Markdeep was created by Morgan McGuire. It extends the work of:
 
@@ -205,7 +205,7 @@ Markdeep includes markdown.js, so you are also bound by the MIT license (which i
 
 # Release History
 
-Starting in November 2015, old releases will be archived as
+Old releases are archived as:
 
 > `http://casual-effects.com/markdeep/_VERSION_/markdeep.min.js`
 
@@ -213,10 +213,23 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2017-10-03 Version 0.21: Robustness
+    1. Upgraded to `[highlight.js](https://highlightjs.org/) 9.12.0`, included shell session highlighting.
+    2. Fixed excess whitespace due to `<p>` tags being generated near section headers.
+    3. Capitalized "Contents" in English.
+    4. Made title and list pattern detection more robust.
+    5. Improved parsing of image grids when near other individual images.
+    6. Made all images hyperlink to their full-resolution versions.
+    7. Improved wide character support for diagrams contributed by Torsten Grust.
+    8. Changed implicit URL parsing to consider a trailing period as punctuation instead of part of the URL. Use explicit URL syntax of `<http://...>` to force it to be part of the URL.
+    9. Added an explicit CSS class for `tocNumber` to support hiding them.
+    10. Added support for nested blockquotes.
+    11. Fixed indented lists immediately after a header.
+
   * 2017-06-30 Version 0.20: Customization
     1. Updated Mathjax for files included via (insert) to use cloudflare.
     2. Fixed events from other JavaScript libraries interfering with Markdeep.
-    3. Updated `wkhtmltopdf` instructions to work around bugs in their 0.12.4 version.
+    3. Updated `wkhtmltopdf` instructions to work around bugs in their `0.12.4` version.
     4. Avoided generating empty <a> tags to work around a longstanding `wkhtmltopdf` bug.
     5. Improved colors for tables in the dark template.
     6. Added Swedish localization by Nils Nilsson.
@@ -245,7 +258,7 @@ You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.
     2. Improved handling of multiple lists within a single schedule list day
     3. Removed console debug output that was accidentally enabled in version 0.17
     4. Defaulted to including the markdeep.min.js script with a trailing ?, to force updates under new aggressive browser caching
-    5. Support for subfigures in references, e.g., Figure [dinosaur](a)
+    5. Support for subfigures in references, e.g., Figure `[dinosaur](a)`
     6. Support for quoted URLs (needed for URLs containing unescaped parentheses)
     7. Allowed fenced code blocks to be indented
     8. Added support for both single and double arrows
