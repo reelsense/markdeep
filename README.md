@@ -214,7 +214,7 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
   * 2017-10-03 Version 0.21: Robustness
-    1. Upgraded to `[highlight.js](https://highlightjs.org/) 9.12.0`, included shell session highlighting.
+    1. Upgraded to [`highlight.js 9.12.0`](https://highlightjs.org/), included shell session highlighting.
     2. Fixed excess whitespace due to `<p>` tags being generated near section headers.
     3. Capitalized "Contents" in English.
     4. Made title and list pattern detection more robust.
