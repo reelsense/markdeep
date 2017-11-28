@@ -1,6 +1,6 @@
 /**
   markdeep.js
-  Version 0.21
+  Version 0.22
 
   Copyright 2015-2017, Morgan McGuire, http://casual-effects.com
   All rights reserved.
@@ -28,13 +28,12 @@
   Sagalaev, which is used for code highlighting. (BSD 3-clause license)
 */
 /**See http://casual-effects.com/markdeep for @license and documentation.
-markdeep.min.js 0.21 (C) 2017 Morgan McGuire 
+markdeep.min.js 0.22 (C) 2017 Morgan McGuire 
 highlight.min.js 9.5.0 (C) 2016 Ivan Sagalaev https://highlightjs.org/*/
 (function() {
 'use strict';
 
-var MARKDEEP_FOOTER = '<div class="markdeepFooter"><i>formatted by <a href="http://casual-effects.com/markdeep" style="color:#999">Markdeep&nbsp;0.21&nbsp;&nbsp;</a></i><div style="display:inline-block;font-size:13px;font-family:\'Times New Roman\',serif;vertical-align:middle;transform:translate(-3px,-1px)rotate(135deg);">&#x2712;</div></div>';
-
+var MARKDEEP_FOOTER = '<div class="markdeepFooter"><i>formatted by <a href="http://casual-effects.com/markdeep" style="color:#999">Markdeep&nbsp;0.22&nbsp;&nbsp;</a></i><div style="display:inline-block;font-size:13px;font-family:\'Times New Roman\',serif;vertical-align:middle;transform:translate(-3px,-1px)rotate(135deg);">&#x2712;</div></div>';
 
 // For minification. This is admittedly scary.
 var _ = String.prototype;
@@ -147,7 +146,7 @@ var STYLESHEET = entag('style',
 
      // Justification tends to handle URLs and code blocks poorly
      // when inside of a bullet, so disable it there
-    'li{text-align:left};' +
+    '.md li{text-align:left};' +
 
      // Force captions on line listings down close and then center them
     '.md div.tilde{' +
@@ -236,17 +235,17 @@ var STYLESHEET = entag('style',
     // makes "//" look better.
     '.md a{font-family:Georgia,Palatino,\'Times New Roman\'}' +
 
-    'h1,.tocHeader,.nonumberh1{' +
+    '.m1 h1,.md .tocHeader,.md .nonumberh1{' +
     'border-bottom:3px solid;' +
     'font-size:20px;' +
     'font-weight:bold;' +
     '}' +
 
-    'h1,.nonumberh1{' +
+    '.md h1,.md .nonumberh1{' +
     'counter-reset: h2 h3 h4 h5 h6' +
     '}' +
 
-    'h2,.nonumberh2{' +
+    '.md h2,.md .nonumberh2{' +
     'counter-reset: h3 h4 h5 h6;' +
     'border-bottom:2px solid #999;' +
     'color:#555;' +
@@ -254,15 +253,15 @@ var STYLESHEET = entag('style',
     'font-size:18px;' +
     '}' +
 
-    'h3,h4,h5,h6,.nonumberh3,.nonumberh4,.nonumberh5,.nonumberh6{' +
+    '.md h3,.md h4,.md h5,.md h6,.md .nonumberh3,.md .nonumberh4,.md .nonumberh5,.md .nonumberh6{' +
     'font-family:Helvetica,Arial,sans-serif;' +
     'color:#555;' +
     'font-size:16px;' +
     '}' +
 
-    'h3{counter-reset:h4 h5 h6}' +
-    'h4{counter-reset:h5 h6}' +
-    'h5{counter-reset:h6}' +
+    '.md h3{counter-reset:h4 h5 h6}' +
+    '.md h4{counter-reset:h5 h6}' +
+    '.md h5{counter-reset:h6}' +
 
     '.md div.table{' +
     'margin:16px 0 16px 0' +
@@ -371,7 +370,97 @@ var STYLESHEET = entag('style',
 
     '.md .longTOC .level1{font-weight:600;display:block;padding-top:12px;margin:0 0 -20px}' +
      
-    '.md .shortTOC{text-align:center;font-weight:bold;margin-top:15px;font-size:14px}');
+    '.md .shortTOC{text-align:center;font-weight:bold;margin-top:15px;font-size:14px}' +
+
+    '.md .admonition{' +
+         'position:relative;' +
+         'margin:1em 0;' +
+         'padding:.4rem 1rem;' +
+         'border-radius:.2rem;' +
+         'border-left:2.5rem solid rgba(68,138,255,.4);' +
+         'background-color:rgba(68,138,255,.15);' +
+     '}' +
+
+     '.md .admonition-title{' +
+         'font-weight:bold;' +
+         'border-bottom:solid 1px rgba(68,138,255,.4);' +
+         'padding-bottom:4px;' +
+         'margin-bottom:4px;' +
+         'margin-left: -1rem;' +
+         'padding-left:1rem;' +
+         'margin-right:-1rem;' +
+         'border-color:rgba(68,138,255,.4)' +
+     '}' +
+
+    '.md .admonition.tip{' +
+       'border-left:2.5rem solid rgba(50,255,90,.4);' +
+       'background-color:rgba(50,255,90,.15)' +
+    '}' +
+                       
+    '.md .admonition.tip::before{' +
+       'content:"\\24d8";' +
+      'font-weight:bold;' +
+    'font-size:150%;' +
+    'position:relative;' +
+    'top:3px;' +
+    'color:black;' +
+    'left:-2.95rem;' +
+    'display:block;' +
+    'width:0;' +
+    'height:0' +
+'}' +
+
+'.md .admonition.tip>.admonition-title{' +
+    'border-color:rgba(50,255,90,.4)' +
+'}' +
+
+     '.md .admonition.warn,.md .admonition.warning{' +
+       'border-left:2.5rem solid rgba(255,145,0,.4);' +
+       'background-color:rgba(255,145,0,.15)' +
+     '}' +
+
+     '.md .admonition.warn::before,.md .admonition.warning::before{' +
+       'content:"\\26A0";' +
+    'font-weight:bold;' +
+    'font-size:150%;' +
+    'position:relative;' +
+    'top:3px;' +
+    'color:black;' +
+    'left:-2.95rem;' +
+    'display:block;' +
+    'width:0;' +
+    'height:0' +
+'}' +
+
+'.md .admonition.warn>.admonition-title{' +
+    'border-color:rgba(255,145,0,.4)' +
+'}' +
+
+'.md .admonition.error{' +
+    'border-left: 2.5rem solid rgba(255,23,68,.4);'+    
+    'background-color:rgba(255,23,68,.15)' +
+'}' +
+
+'.md .admonition.error>.admonition-title{' +
+    'border-color:rgba(255,23,68,.4)'+
+'}' +
+
+'.md .admonition.error::before{' + 
+    'content: "\\2612";' +
+    'font-family:"Arial";' +
+    'font-weight:600;' +
+    'font-size:200%;' +
+    'position:relative;' +
+    'color:black;' +
+    'top:-2px;' +
+    'left:-3rem;' +
+    'display:block;' +
+    'width:0;' +
+    'height:0' +
+                       '}' +
+                       
+                       '.md .admonition p:last-child{margin-bottom:0}' 
+);
 
 var MARKDEEP_LINE = '<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>';
 
@@ -623,7 +712,55 @@ var HUNGARIAN = {
     }
 };
 
+// Translated by Takashi Masuyama
+var JAPANESE = {
+    keyword: {
+        table:     '表',
+        figure:    '図',
+        listing:   '一覧',
+        diagram:   '図',
+        contents:  '目次',
 
+        sec:       '章',
+        section:   '節',
+        subsection: '項',
+
+        Monday:    '月',
+        Tuesday:   '火',
+        Wednesday: '水',
+        Thursday:  '木',
+        Friday:    '金',
+        Saturday:  '土',
+        Sunday:    '日',
+
+        January:   '1月',
+        February:  '2月',
+        March:     '3月',
+        April:     '4月',
+        May:       '5月',
+        June:      '6月',
+        July:      '7月',
+        August:    '8月',
+        September: '9月',
+        October:   '10月',
+        November:  '11月',
+        December:  '12月',
+
+        jan: '1月',
+        feb: '2月',
+        mar: '3月',
+        apr: '4月',
+        may: '5月',
+        jun: '6月',
+        jul: '7月',
+        aug: '8月',
+        sep: '9月',
+        oct: '10月',
+        nov: '11月',
+        dec: '12月'
+    }
+};    
+    
 // Translated by Sandor Berczi
 var GERMAN = {
     keyword: {
@@ -737,6 +874,7 @@ var DEFAULT_OPTIONS = {
 };
 
 
+// See http://www.i18nguy.com/unicode/language-identifiers.html for keys
 var LANG_TABLE = {
     en: {keyword:{}},        
     ru: RUSSIAN,
@@ -745,7 +883,8 @@ var LANG_TABLE = {
     bg: BULGARIAN,
     de: GERMAN,
     hu: HUNGARIAN,
-    sv: SWEDISH
+    sv: SWEDISH,
+    ja: JAPANESE
 // Awaiting localization by a native speaker:
 //    es: SPANISH
 //    ...
@@ -858,7 +997,7 @@ function sectionNumberingStylesheet() {
     var s = '';
 
     for (var i = 1; i <= 6; ++i) {
-        s += 'h' + i + '::before {\ncontent:';
+        s += '.md h' + i + '::before {\ncontent:';
         for (var j = 1; j <= i; ++j) {
             s += 'counter(h' + j + ') "' + ((j < i) ? '.' : ' ') + '"';
         }
@@ -1174,9 +1313,8 @@ function replaceLists(s, protect) {
     var ATTRIBS = {'+': protect('class="plus"'), '-': protect('class="minus"'), '*': protect('class="asterisk"')};
     var NUMBER_ATTRIBS = protect('class="number"');
 
-    // Sometimes the list regexp grabs too much because subsequent
-    // lines are indented *less* than the first line. So, if that case
-    // is found, re-run the regexp.
+    // Sometimes the list regexp grabs too much because subsequent lines are indented *less*
+    // than the first line. So, if that case is found, re-run the regexp.
     while (keepGoing) {
         keepGoing = false;
         s = s.rp(LIST_BLOCK_REGEXP, function (match, prefix, block) {
@@ -1202,6 +1340,7 @@ function replaceLists(s, protect) {
                 attribs = attribs || NUMBER_ATTRIBS;
                 var isOrdered   = /^\d+\.[ \t]/.test(trimmed);
                 var isBlank     = trimmed === '';
+                var start       = isOrdered ? ' ' + protect('start=' + trimmed.match(/^\d+/)[0]) : '';
 
                 if (isOrdered || isUnordered) {
                     // Add the indentation for the bullet itself
@@ -1232,7 +1371,7 @@ function replaceLists(s, protect) {
                                        // Subtract off the two indent characters we added above
                                        indentChars: line.ss(0, indentLevel - 2)};
                             stack.push(current);
-                            result += '\n<' + current.tag + '>';
+                            result += '\n<' + current.tag + start + '>';
                         }
                     } else if (current.indentLevel !== -1) {
                         // End previous list item, if there was one
@@ -1902,8 +2041,8 @@ function markdeepToHTML(str, elementMode) {
     // processing so that their code is protected from further
     // Markdown processing
     var stylizeFence = function (cssClass, symbol) {
-        var pattern = new RegExp('\n([ \t]*)' + symbol + '{3,}(.*)\n([\\s\\S]+?)\n\\1' + symbol + '{3,}\n([ \t]*\\[.+(?:\n.+){0,3}\\])?', 'g');
-        str = str.rp(pattern, function(match, indent, lang, sourceCode, caption) {
+        var pattern = new RegExp('\\n([ \\t]*)' + symbol + '{3,}([ \\t]*\\S*)([ \\t]+.+)?\n([\\s\\S]+?)\n\\1' + symbol + '{3,}\\s*\n([ \t]*\\[.+(?:\n.+){0,3}\\])?', 'g');
+        str = str.rp(pattern, function(match, indent, lang, cssSubClass, sourceCode, caption) {
             if (caption) {
                 caption = caption.trim();
                 caption = '<div ' + protect('class="listingcaption ' + cssClass + '"') + '>' + caption.ss(1, caption.length - 1) + '</div>\n';
@@ -1914,13 +2053,38 @@ function markdeepToHTML(str, elementMode) {
             // Remove the block's own indentation from each line of sourceCode
             sourceCode = sourceCode.rp(new RegExp('(^|\n)' + indent, 'g'), '$1');
 
-            var highlighted = hljs.highlightAuto(sourceCode, lang);
             var captionAbove = option('captionAbove', 'listing')
 
+            
+            var nextSourceCode, nextLang, nextCssSubClass;
+            var body = '';
+            do {
+                nextSourceCode = nextLang = nextCssSubClass = undefined;
+                sourceCode = sourceCode.rp(new RegExp('\\n([ \\t]*)' + symbol + '{3,}([ \\t]*\\S+)([ \\t]+.+)?\n([\\s\\S]*)'),
+                                           function (match, indent, lang, cssSubClass, everythingElse) {
+                                               nextLang = [lang];
+                                               nextCssSubClass = cssSubClass;
+                                               nextSourceCode = everythingElse;
+                                               return '';
+                                           });
+
+                // Highlight and append this block
+                var highlighted = hljs.highlightAuto(sourceCode, lang).value;
+                if (cssSubClass) {
+                    highlighted = entag('div', highlighted, 'class="' + cssSubClass + '"');
+                }
+                body += highlighted;
+
+                // Advance the next nested block
+                sourceCode = nextSourceCode;
+                lang = nextLang;
+                cssSubClass = nextCssSubClass;
+            } while (sourceCode);
+            
             // Insert paragraph close/open tags, since browsers force them anyway around pre tags
             // We need the indent in case this is a code block inside a list that is indented.
             return '\n' + indent + '</p>' + (caption && captionAbove ? caption : '') +
-                protect(entag('pre', entag('code', highlighted.value), 'class="listing ' + cssClass + '"')) +
+                protect(entag('pre', entag('code', body), 'class="listing ' + cssClass + '"')) +
                 (caption && ! captionAbove ? caption : '') + '<p>\n';
         });
     };
@@ -1930,7 +2094,10 @@ function markdeepToHTML(str, elementMode) {
 
     // Protect raw <CODE> content
     str = str.rp(/(<code\b.*?<\/code>)/gi, protector);
-    
+
+    // Remove XML/HTML COMMENTS
+    str = str.rp(/<!--\s[\s\S]+?\s-->/g, '');
+
     str = replaceDiagrams(str);
     
     // Protect SVG blocks (including the ones we just inserted)
@@ -2029,6 +2196,13 @@ function markdeepToHTML(str, elementMode) {
 
     // PAGE BREAK or HORIZONTAL RULE: +++++
     str = str.rp(/\n[ \t]*\+{5,}[ \t]*\n/g, '\n<hr ' + protect('class="pagebreak"') + '/>\n');
+
+    // ADMONITION: !!! (class) (title)\n body
+    str = str.rp(/^!!![ \t]*([^\s"'><&\:]*)\:?(.*)\n([ \t]{3,}.*\s*\n)*/gm, function (match, cssClass, title) {
+        // Have to extract the body by splitting match because the regex doesn't capture the body correctly in the multi-line case
+        match = match.trim();
+        return '\n\n' + entag('div', ((title ? entag('div', title, protect('class="admonition-title"')) + '\n' : '') + match.ss(match.indexOf('\n'))).trim(), protect('class="admonition ' + cssClass.toLowerCase().trim() + '"')) + '\n\n';
+    });
 
     // FANCY QUOTE in a blockquote:
     // > " .... "
@@ -2276,8 +2450,11 @@ function markdeepToHTML(str, elementMode) {
     // ARROWS:
     str = str.rp(/(\s|^)<==(\s)/g, '$1\u21D0$2');
     str = str.rp(/(\s|^)->(\s)/g, '$1&rarr;$2');
+    // (this requires having removed HTML comments first)
+    str = str.rp(/(\s|^)-->(\s)/g, '$1&xrarr;$2');
     str = str.rp(/(\s|^)==>(\s)/g, '$1\u21D2$2');
     str = str.rp(/(\s|^)<-(\s)/g, '$1&larr;$2');
+    str = str.rp(/(\s|^)<--(\s)/g, '$1&xlarr;$2');
     str = str.rp(/(\s|^)<==>(\s)/g, '$1\u21D4$2');
     str = str.rp(/(\s|^)<->(\s)/g, '$1\u2194$2');
 
@@ -2313,7 +2490,7 @@ function markdeepToHTML(str, elementMode) {
     // work correctly
     str = replaceDefinitionLists(str, protect);
 
-    // LISTS: lines with -, +, *, or 1.
+    // LISTS: lines with -, +, *, or number.
     str = replaceLists(str, protect);
 
     // DEGREE: ##-degree
@@ -3778,7 +3955,29 @@ if (! window.alreadyProcessedMarkdeep) {
             return STYLESHEET + sectionNumberingStylesheet() + HIGHLIGHT_STYLESHEET;
         }
     });
- 
+
+    var MATHJAX_CONFIG ='<script type="text/x-mathjax-config">MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });</script>' +
+        '<span style="display:none">' +
+        // Custom definitions (NC == \newcommand)
+        '$$NC{\\n}{\\hat{n}}NC{\\w}{\\hat{\\omega}}NC{\\wi}{\\w_\\mathrm{i}}NC{\\wo}{\\w_\\mathrm{o}}NC{\\wh}{\\w_\\mathrm{h}}NC{\\Li}{L_\\mathrm{i}}NC{\\Lo}{L_\\mathrm{o}}NC{\\Le}{L_\\mathrm{e}}NC{\\Lr}{L_\\mathrm{r}}NC{\\Lt}{L_\\mathrm{t}}NC{\\O}{\\mathrm{O}}NC{\\degrees}{{^{\\large\\circ}}}NC{\\T}{\\mathsf{T}}NC{\\mathset}[1]{\\mathbb{#1}}NC{\\Real}{\\mathset{R}}NC{\\Integer}{\\mathset{Z}}NC{\\Boolean}{\\mathset{B}}NC{\\Complex}{\\mathset{C}}NC{\\un}[1]{\\,\\mathrm{#1}}$$\n'.rp(/NC/g, '\\newcommand') +
+        '</span>\n'
+    var MATHJAX_URL = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+
+    function loadMathJax() {
+        // Dynamically load mathjax
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = MATHJAX_URL;
+        document.getElementsByTagName("head")[0].appendChild(script);
+    }
+
+    function needsMathJax(html) {
+        // Need MathJax if $$ ... $$, \( ... \), or \begin{
+        return option('detectMath') &&
+            ((html.search(/(?:\$\$[\s\S]+\$\$)|(?:\\begin{)/m) !== -1) || 
+             (html.search(/\\\(.*\\\)/) !== -1));
+    }
+    
     var mode = option('mode');
     switch (mode) {
     case 'script':
@@ -3806,16 +4005,20 @@ if (! window.alreadyProcessedMarkdeep) {
                 }
                 element.outerHTML = '<center class="md">' + diagramToSVG(removeLeadingSpace(src), '') + '</center>';
             });
-        
+
+        var anyNeedsMathJax = false;
         toArray(document.getElementsByClassName('markdeep')).concat(toArray(document.getElementsByTagName('markdeep'))).forEach(
             function (src) {
                 var dst = document.createElement('div');
-                dst.innerHTML = markdeepToHTML(removeLeadingSpace(unescapeHTMLEntities(src.innerHTML)), true);
+                var html = markdeepToHTML(removeLeadingSpace(unescapeHTMLEntities(src.innerHTML)), true);
+                anyNeedsMathJax = anyNeedsMathJax || needsMathJax(html);
+                dst.innerHTML = html;
                 src.parentNode.replaceChild(dst, src);
             });
 
-        // Include our stylesheet even if there are no tags, but not the BODY_STYLESHEET
-        document.head.innerHTML = window.markdeep.stylesheet() + document.head.innerHTML;
+        // Include our stylesheet even if there are no MARKDEEP tags, but do not include the BODY_STYLESHEET.
+        document.head.innerHTML = window.markdeep.stylesheet() + document.head.innerHTML + (anyNeedsMathJax ? MATHJAX_CONFIG : '');
+        loadMathJax();
         return;
     }
     
@@ -3868,18 +4071,10 @@ if (! window.alreadyProcessedMarkdeep) {
         var markdeepHTML = markdeepToHTML(source, false);
 
         // console.log(markdeepHTML); // Final processed source 
-        
-        // Need MathJax if $$ ... $$, \( ... \), or \begin{
-        var needMathJax = option('detectMath') &&
-            ((markdeepHTML.search(/(?:\$\$[\s\S]+\$\$)|(?:\\begin{)/m) !== -1) || 
-             (markdeepHTML.search(/\\\(.*\\\)/) !== -1));
-        
-        if (needMathJax) {
-            // Custom definitions (NC == \newcommand)
-            var MATHJAX_COMMANDS = '$$NC{\\n}{\\hat{n}}NC{\\w}{\\hat{\\omega}}NC{\\wi}{\\w_\\mathrm{i}}NC{\\wo}{\\w_\\mathrm{o}}NC{\\wh}{\\w_\\mathrm{h}}NC{\\Li}{L_\\mathrm{i}}NC{\\Lo}{L_\\mathrm{o}}NC{\\Le}{L_\\mathrm{e}}NC{\\Lr}{L_\\mathrm{r}}NC{\\Lt}{L_\\mathrm{t}}NC{\\O}{\\mathrm{O}}NC{\\degrees}{{^{\\large\\circ}}}NC{\\T}{\\mathsf{T}}NC{\\mathset}[1]{\\mathbb{#1}}NC{\\Real}{\\mathset{R}}NC{\\Integer}{\\mathset{Z}}NC{\\Boolean}{\\mathset{B}}NC{\\Complex}{\\mathset{C}}NC{\\un}[1]{\\,\\mathrm{#1}}$$\n'.rp(/NC/g, '\\newcommand');
 
-            markdeepHTML = '<script type="text/x-mathjax-config">MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });</script>' +
-                '<span style="display:none">' + MATHJAX_COMMANDS + '</span>\n' + markdeepHTML; 
+        var needMathJax = needsMathJax(markdeepHTML);
+        if (needMathJax) {
+            markdeepHTML = MATHJAX_CONFIG + markdeepHTML; 
         }
         
         markdeepHTML += MARKDEEP_FOOTER;
@@ -3897,20 +4092,13 @@ if (! window.alreadyProcessedMarkdeep) {
             var text = '<meta charset="UTF-8"><meta http-equiv="content-type" content="text/html;charset=UTF-8">' + head + document.head.innerHTML + markdeepHTML;
             if (needMathJax) {
                 // Dynamically load mathjax
-                text += '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
+                text += '<script src="' + MATHJAX_URL +'"></script>';
             }
             document.body.innerHTML = entag('code', escapeHTMLEntities(text));
         } else {
             document.head.innerHTML = '<meta charset="UTF-8"><meta http-equiv="content-type" content="text/html;charset=UTF-8">' + head + document.head.innerHTML;
             document.body.innerHTML = markdeepHTML;
-            if (needMathJax) {
-                // Dynamically load mathjax
-                var script = document.createElement("script");
-                script.type = "text/javascript";
-
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-                document.getElementsByTagName("head")[0].appendChild(script);
-            }
+            if (needMathJax) { loadMathJax(); }            
         }
 
         document.body.style.visibility = 'visible';

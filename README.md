@@ -213,6 +213,18 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2017-11-25 Version 0.22: Unity
+    1. Added support for long <-- and --> arrows in body text.
+    2. Added support for ordered lists that begin with numbers other than 1.
+    3. Markdeep now strips HTML comments that are not in code blocks at the beginning of processing.
+    4. Added Japanese localization by Takashi Masuyama.
+    5. Added optional CSS classes to fenced code blocks.
+    6. Added multiple unioned code blocks for use in highlighting and multi-language examples.
+    7. Fixed CSS to not leak outside Markdeep blocks when in html embedding mode.
+    8. Added support for LaTeX when in doxygen and html embedding modes.
+    9. Added admonitions (callout notes for the reader).
+    10. Added `apidoc.css` stylesheet and corresponding template by Aras Pranckevičius.
+
   * 2017-10-03 Version 0.21: Robustness
     1. Upgraded to [`highlight.js 9.12.0`](https://highlightjs.org/), included shell session highlighting.
     2. Fixed excess whitespace due to `<p>` tags being generated near section headers.
