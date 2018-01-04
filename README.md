@@ -213,6 +213,16 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2017-12-31 Version 0.23: Code
+    1. Tweaked the apidoc.css style.
+    2. Fixed top-level header formatting broken in the previous release.
+    3. Code blocks now use four-space tabs (instead of eight spaces).
+    4. Added syntax coloring for Go, Rust, R, Lua, TypeScript, and Swift code blocks.
+    5. Added support for back-to-back code blocks with no text between them.
+    6. Improved robustness of schedule list detection and removed warning messages from speculative parser.
+    7. Localized smart quotation marks to the same region as other keywords, following this spec.
+    8. Fixed email address detection for 2-letter domains with a patch by Michael Smirnov.
+
   * 2017-11-25 Version 0.22: Unity
     1. Added support for long <-- and --> arrows in body text.
     2. Added support for ordered lists that begin with numbers other than 1.
