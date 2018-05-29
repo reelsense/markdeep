@@ -213,6 +213,16 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2018-04-28 Version 1.00: Feature Complete
+    1. Fixed use of (include here) with implicit email links.
+    1. Added Portuguese localization by Tiago Antão
+    1. Added Italian localization by Leonardo Taglialegne
+    1. Fixed references not working for localized figure variants
+    1. Added support for Gravizo SVG format graphs
+    1. Removed browser header/footer when printing to PDF
+    1. Support for IE11
+    1. Added Lithuanian localization by Warmist
+
   * 2017-12-31 Version 0.23: Code
     1. Tweaked the apidoc.css style.
     2. Fixed top-level header formatting broken in the previous release.
