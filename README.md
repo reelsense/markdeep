@@ -213,6 +213,28 @@ You can modify the Markdeep line at the bottom of a document to hardcode to a sp
 
 You can report bugs to [morgan@casual-effects.com](mailto:morgan@casual-effects.com) by sending a Markdeep document and what you think is wrong about the way that it appears.
 
+  * 2018-09-03 Version 1.02
+    1. Documented how to add Atom support.
+    1. Added .webm video support.
+    1. Improved Swedish localization.
+    1. Fixed mixed task/bullet/number lists.
+    1. Permitted ATX-style headers with # in them.
+    1. Fixed trailing blank line in diagrams.
+    1. Added support for audio files using video link syntax.
+    1. Added optional line numbers on code listings.
+
+  * 2018-07-04 Version 1.01
+    1. Fixed alignment of diagrams with no right border of *
+    1. Fixed \pagebreak requiring other characters on the same line
+    1. Added Czech localization by Jan Toušek
+    1. Added support for localized "section" appearing before or after a section title
+    1. Made reference link parsing more robust, allowing newlines within the text
+    1. Added [x] github style task lists
+    1. Fixed multiple (insert ... here) statements in a document
+    1. Made the apidoc.md.html sample not flash the raw source on load
+    1. Stripped links from section titles in the table of contents
+    1. Added support for reference images
+
   * 2018-04-28 Version 1.00: Feature Complete
     1. Fixed use of (include here) with implicit email links.
     1. Added Portuguese localization by Tiago Antão
